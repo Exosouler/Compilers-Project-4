@@ -9,7 +9,7 @@ public class Main {
     public static void main (String [] args){
 
     	int i;
-    	
+    	//Test commit
     	for (i=0;i<args.length;i++){
 
 	        FileInputStream fis = null;
