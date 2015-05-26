@@ -68,324 +68,37 @@ public class GJNoArguDepthFirst<R> implements GJNoArguVisitor<R> {
    //
 
    /**
-    * f0 -> MainClass()
-    * f1 -> ( TypeDeclaration() )*
-    * f2 -> <EOF>
+    * f0 -> "MAIN"
+    * f1 -> StmtList()
+    * f2 -> "END"
+    * f3 -> ( Procedure() )*
+    * f4 -> <EOF>
     */
    public R visit(Goal n) throws Exception {
       R _ret=null;
       n.f0.accept(this);
       n.f1.accept(this);
       n.f2.accept(this);
-      return _ret;
-   }
-
-   /**
-    * f0 -> "class"
-    * f1 -> Identifier()
-    * f2 -> "{"
-    * f3 -> "public"
-    * f4 -> "static"
-    * f5 -> "void"
-    * f6 -> "main"
-    * f7 -> "("
-    * f8 -> "String"
-    * f9 -> "["
-    * f10 -> "]"
-    * f11 -> Identifier()
-    * f12 -> ")"
-    * f13 -> "{"
-    * f14 -> ( VarDeclaration() )*
-    * f15 -> ( Statement() )*
-    * f16 -> "}"
-    * f17 -> "}"
-    */
-   public R visit(MainClass n) throws Exception {
-      R _ret=null;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      n.f2.accept(this);
       n.f3.accept(this);
       n.f4.accept(this);
-      n.f5.accept(this);
-      n.f6.accept(this);
-      n.f7.accept(this);
-      n.f8.accept(this);
-      n.f9.accept(this);
-      n.f10.accept(this);
-      n.f11.accept(this);
-      n.f12.accept(this);
-      n.f13.accept(this);
-      n.f14.accept(this);
-      n.f15.accept(this);
-      n.f16.accept(this);
-      n.f17.accept(this);
       return _ret;
    }
 
    /**
-    * f0 -> ClassDeclaration()
-    *       | ClassExtendsDeclaration()
+    * f0 -> ( ( Label() )? Stmt() )*
     */
-   public R visit(TypeDeclaration n) throws Exception {
+   public R visit(StmtList n) throws Exception {
       return n.f0.accept(this);
    }
 
    /**
-    * f0 -> "class"
-    * f1 -> Identifier()
-    * f2 -> "{"
-    * f3 -> ( VarDeclaration() )*
-    * f4 -> ( MethodDeclaration() )*
-    * f5 -> "}"
-    */
-   public R visit(ClassDeclaration n) throws Exception {
-      R _ret=null;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      n.f2.accept(this);
-      n.f3.accept(this);
-      n.f4.accept(this);
-      n.f5.accept(this);
-      return _ret;
-   }
-
-   /**
-    * f0 -> "class"
-    * f1 -> Identifier()
-    * f2 -> "extends"
-    * f3 -> Identifier()
-    * f4 -> "{"
-    * f5 -> ( VarDeclaration() )*
-    * f6 -> ( MethodDeclaration() )*
-    * f7 -> "}"
-    */
-   public R visit(ClassExtendsDeclaration n) throws Exception {
-      R _ret=null;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      n.f2.accept(this);
-      n.f3.accept(this);
-      n.f4.accept(this);
-      n.f5.accept(this);
-      n.f6.accept(this);
-      n.f7.accept(this);
-      return _ret;
-   }
-
-   /**
-    * f0 -> Type()
-    * f1 -> Identifier()
-    * f2 -> ";"
-    */
-   public R visit(VarDeclaration n) throws Exception {
-      R _ret=null;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      n.f2.accept(this);
-      return _ret;
-   }
-
-   /**
-    * f0 -> "public"
-    * f1 -> Type()
-    * f2 -> Identifier()
-    * f3 -> "("
-    * f4 -> ( FormalParameterList() )?
-    * f5 -> ")"
-    * f6 -> "{"
-    * f7 -> ( VarDeclaration() )*
-    * f8 -> ( Statement() )*
-    * f9 -> "return"
-    * f10 -> Expression()
-    * f11 -> ";"
-    * f12 -> "}"
-    */
-   public R visit(MethodDeclaration n) throws Exception {
-      R _ret=null;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      n.f2.accept(this);
-      n.f3.accept(this);
-      n.f4.accept(this);
-      n.f5.accept(this);
-      n.f6.accept(this);
-      n.f7.accept(this);
-      n.f8.accept(this);
-      n.f9.accept(this);
-      n.f10.accept(this);
-      n.f11.accept(this);
-      n.f12.accept(this);
-      return _ret;
-   }
-
-   /**
-    * f0 -> FormalParameter()
-    * f1 -> FormalParameterTail()
-    */
-   public R visit(FormalParameterList n) throws Exception {
-      R _ret=null;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      return _ret;
-   }
-
-   /**
-    * f0 -> Type()
-    * f1 -> Identifier()
-    */
-   public R visit(FormalParameter n) throws Exception {
-      R _ret=null;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      return _ret;
-   }
-
-   /**
-    * f0 -> ( FormalParameterTerm() )*
-    */
-   public R visit(FormalParameterTail n) throws Exception {
-      return n.f0.accept(this);
-   }
-
-   /**
-    * f0 -> ","
-    * f1 -> FormalParameter()
-    */
-   public R visit(FormalParameterTerm n) throws Exception {
-      R _ret=null;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      return _ret;
-   }
-
-   /**
-    * f0 -> ArrayType()
-    *       | BooleanType()
-    *       | IntegerType()
-    *       | Identifier()
-    */
-   public R visit(Type n) throws Exception {
-      return n.f0.accept(this);
-   }
-
-   /**
-    * f0 -> "int"
+    * f0 -> Label()
     * f1 -> "["
-    * f2 -> "]"
-    */
-   public R visit(ArrayType n) throws Exception {
-      R _ret=null;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      n.f2.accept(this);
-      return _ret;
-   }
-
-   /**
-    * f0 -> "boolean"
-    */
-   public R visit(BooleanType n) throws Exception {
-      return n.f0.accept(this);
-   }
-
-   /**
-    * f0 -> "int"
-    */
-   public R visit(IntegerType n) throws Exception {
-      return n.f0.accept(this);
-   }
-
-   /**
-    * f0 -> Block()
-    *       | AssignmentStatement()
-    *       | ArrayAssignmentStatement()
-    *       | IfStatement()
-    *       | WhileStatement()
-    *       | PrintStatement()
-    */
-   public R visit(Statement n) throws Exception {
-      return n.f0.accept(this);
-   }
-
-   /**
-    * f0 -> "{"
-    * f1 -> ( Statement() )*
-    * f2 -> "}"
-    */
-   public R visit(Block n) throws Exception {
-      R _ret=null;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      n.f2.accept(this);
-      return _ret;
-   }
-
-   /**
-    * f0 -> Identifier()
-    * f1 -> "="
-    * f2 -> Expression()
-    * f3 -> ";"
-    */
-   public R visit(AssignmentStatement n) throws Exception {
-      R _ret=null;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      n.f2.accept(this);
-      n.f3.accept(this);
-      return _ret;
-   }
-
-   /**
-    * f0 -> Identifier()
-    * f1 -> "["
-    * f2 -> Expression()
+    * f2 -> IntegerLiteral()
     * f3 -> "]"
-    * f4 -> "="
-    * f5 -> Expression()
-    * f6 -> ";"
+    * f4 -> StmtExp()
     */
-   public R visit(ArrayAssignmentStatement n) throws Exception {
-      R _ret=null;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      n.f2.accept(this);
-      n.f3.accept(this);
-      n.f4.accept(this);
-      n.f5.accept(this);
-      n.f6.accept(this);
-      return _ret;
-   }
-
-   /**
-    * f0 -> "if"
-    * f1 -> "("
-    * f2 -> Expression()
-    * f3 -> ")"
-    * f4 -> Statement()
-    * f5 -> "else"
-    * f6 -> Statement()
-    */
-   public R visit(IfStatement n) throws Exception {
-      R _ret=null;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      n.f2.accept(this);
-      n.f3.accept(this);
-      n.f4.accept(this);
-      n.f5.accept(this);
-      n.f6.accept(this);
-      return _ret;
-   }
-
-   /**
-    * f0 -> "while"
-    * f1 -> "("
-    * f2 -> Expression()
-    * f3 -> ")"
-    * f4 -> Statement()
-    */
-   public R visit(WhileStatement n) throws Exception {
+   public R visit(Procedure n) throws Exception {
       R _ret=null;
       n.f0.accept(this);
       n.f1.accept(this);
@@ -396,43 +109,39 @@ public class GJNoArguDepthFirst<R> implements GJNoArguVisitor<R> {
    }
 
    /**
-    * f0 -> "System.out.println"
-    * f1 -> "("
-    * f2 -> Expression()
-    * f3 -> ")"
-    * f4 -> ";"
+    * f0 -> NoOpStmt()
+    *       | ErrorStmt()
+    *       | CJumpStmt()
+    *       | JumpStmt()
+    *       | HStoreStmt()
+    *       | HLoadStmt()
+    *       | MoveStmt()
+    *       | PrintStmt()
     */
-   public R visit(PrintStatement n) throws Exception {
-      R _ret=null;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      n.f2.accept(this);
-      n.f3.accept(this);
-      n.f4.accept(this);
-      return _ret;
-   }
-
-   /**
-    * f0 -> AndExpression()
-    *       | CompareExpression()
-    *       | PlusExpression()
-    *       | MinusExpression()
-    *       | TimesExpression()
-    *       | ArrayLookup()
-    *       | ArrayLength()
-    *       | MessageSend()
-    *       | Clause()
-    */
-   public R visit(Expression n) throws Exception {
+   public R visit(Stmt n) throws Exception {
       return n.f0.accept(this);
    }
 
    /**
-    * f0 -> Clause()
-    * f1 -> "&&"
-    * f2 -> Clause()
+    * f0 -> "NOOP"
     */
-   public R visit(AndExpression n) throws Exception {
+   public R visit(NoOpStmt n) throws Exception {
+      return n.f0.accept(this);
+   }
+
+   /**
+    * f0 -> "ERROR"
+    */
+   public R visit(ErrorStmt n) throws Exception {
+      return n.f0.accept(this);
+   }
+
+   /**
+    * f0 -> "CJUMP"
+    * f1 -> Temp()
+    * f2 -> Label()
+    */
+   public R visit(CJumpStmt n) throws Exception {
       R _ret=null;
       n.f0.accept(this);
       n.f1.accept(this);
@@ -441,64 +150,23 @@ public class GJNoArguDepthFirst<R> implements GJNoArguVisitor<R> {
    }
 
    /**
-    * f0 -> PrimaryExpression()
-    * f1 -> "<"
-    * f2 -> PrimaryExpression()
+    * f0 -> "JUMP"
+    * f1 -> Label()
     */
-   public R visit(CompareExpression n) throws Exception {
+   public R visit(JumpStmt n) throws Exception {
       R _ret=null;
       n.f0.accept(this);
       n.f1.accept(this);
-      n.f2.accept(this);
       return _ret;
    }
 
    /**
-    * f0 -> PrimaryExpression()
-    * f1 -> "+"
-    * f2 -> PrimaryExpression()
+    * f0 -> "HSTORE"
+    * f1 -> Temp()
+    * f2 -> IntegerLiteral()
+    * f3 -> Temp()
     */
-   public R visit(PlusExpression n) throws Exception {
-      R _ret=null;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      n.f2.accept(this);
-      return _ret;
-   }
-
-   /**
-    * f0 -> PrimaryExpression()
-    * f1 -> "-"
-    * f2 -> PrimaryExpression()
-    */
-   public R visit(MinusExpression n) throws Exception {
-      R _ret=null;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      n.f2.accept(this);
-      return _ret;
-   }
-
-   /**
-    * f0 -> PrimaryExpression()
-    * f1 -> "*"
-    * f2 -> PrimaryExpression()
-    */
-   public R visit(TimesExpression n) throws Exception {
-      R _ret=null;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      n.f2.accept(this);
-      return _ret;
-   }
-
-   /**
-    * f0 -> PrimaryExpression()
-    * f1 -> "["
-    * f2 -> PrimaryExpression()
-    * f3 -> "]"
-    */
-   public R visit(ArrayLookup n) throws Exception {
+   public R visit(HStoreStmt n) throws Exception {
       R _ret=null;
       n.f0.accept(this);
       n.f1.accept(this);
@@ -508,11 +176,26 @@ public class GJNoArguDepthFirst<R> implements GJNoArguVisitor<R> {
    }
 
    /**
-    * f0 -> PrimaryExpression()
-    * f1 -> "."
-    * f2 -> "length"
+    * f0 -> "HLOAD"
+    * f1 -> Temp()
+    * f2 -> Temp()
+    * f3 -> IntegerLiteral()
     */
-   public R visit(ArrayLength n) throws Exception {
+   public R visit(HLoadStmt n) throws Exception {
+      R _ret=null;
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
+      return _ret;
+   }
+
+   /**
+    * f0 -> "MOVE"
+    * f1 -> Temp()
+    * f2 -> Exp()
+    */
+   public R visit(MoveStmt n) throws Exception {
       R _ret=null;
       n.f0.accept(this);
       n.f1.accept(this);
@@ -521,29 +204,65 @@ public class GJNoArguDepthFirst<R> implements GJNoArguVisitor<R> {
    }
 
    /**
-    * f0 -> PrimaryExpression()
-    * f1 -> "."
-    * f2 -> Identifier()
-    * f3 -> "("
-    * f4 -> ( ExpressionList() )?
-    * f5 -> ")"
+    * f0 -> "PRINT"
+    * f1 -> SimpleExp()
     */
-   public R visit(MessageSend n) throws Exception {
+   public R visit(PrintStmt n) throws Exception {
+      R _ret=null;
+      n.f0.accept(this);
+      n.f1.accept(this);
+      return _ret;
+   }
+
+   /**
+    * f0 -> Call()
+    *       | HAllocate()
+    *       | BinOp()
+    *       | SimpleExp()
+    */
+   public R visit(Exp n) throws Exception {
+      return n.f0.accept(this);
+   }
+
+   /**
+    * f0 -> "BEGIN"
+    * f1 -> StmtList()
+    * f2 -> "RETURN"
+    * f3 -> SimpleExp()
+    * f4 -> "END"
+    */
+   public R visit(StmtExp n) throws Exception {
       R _ret=null;
       n.f0.accept(this);
       n.f1.accept(this);
       n.f2.accept(this);
       n.f3.accept(this);
       n.f4.accept(this);
-      n.f5.accept(this);
       return _ret;
    }
 
    /**
-    * f0 -> Expression()
-    * f1 -> ExpressionTail()
+    * f0 -> "CALL"
+    * f1 -> SimpleExp()
+    * f2 -> "("
+    * f3 -> ( Temp() )*
+    * f4 -> ")"
     */
-   public R visit(ExpressionList n) throws Exception {
+   public R visit(Call n) throws Exception {
+      R _ret=null;
+      n.f0.accept(this);
+      n.f1.accept(this);
+      n.f2.accept(this);
+      n.f3.accept(this);
+      n.f4.accept(this);
+      return _ret;
+   }
+
+   /**
+    * f0 -> "HALLOCATE"
+    * f1 -> SimpleExp()
+    */
+   public R visit(HAllocate n) throws Exception {
       R _ret=null;
       n.f0.accept(this);
       n.f1.accept(this);
@@ -551,43 +270,46 @@ public class GJNoArguDepthFirst<R> implements GJNoArguVisitor<R> {
    }
 
    /**
-    * f0 -> ( ExpressionTerm() )*
+    * f0 -> Operator()
+    * f1 -> Temp()
+    * f2 -> SimpleExp()
     */
-   public R visit(ExpressionTail n) throws Exception {
-      return n.f0.accept(this);
-   }
-
-   /**
-    * f0 -> ","
-    * f1 -> Expression()
-    */
-   public R visit(ExpressionTerm n) throws Exception {
+   public R visit(BinOp n) throws Exception {
       R _ret=null;
       n.f0.accept(this);
       n.f1.accept(this);
+      n.f2.accept(this);
       return _ret;
    }
 
    /**
-    * f0 -> NotExpression()
-    *       | PrimaryExpression()
+    * f0 -> "LT"
+    *       | "PLUS"
+    *       | "MINUS"
+    *       | "TIMES"
     */
-   public R visit(Clause n) throws Exception {
+   public R visit(Operator n) throws Exception {
       return n.f0.accept(this);
    }
 
    /**
-    * f0 -> IntegerLiteral()
-    *       | TrueLiteral()
-    *       | FalseLiteral()
-    *       | Identifier()
-    *       | ThisExpression()
-    *       | ArrayAllocationExpression()
-    *       | AllocationExpression()
-    *       | BracketExpression()
+    * f0 -> Temp()
+    *       | IntegerLiteral()
+    *       | Label()
     */
-   public R visit(PrimaryExpression n) throws Exception {
+   public R visit(SimpleExp n) throws Exception {
       return n.f0.accept(this);
+   }
+
+   /**
+    * f0 -> "TEMP"
+    * f1 -> IntegerLiteral()
+    */
+   public R visit(Temp n) throws Exception {
+      R _ret=null;
+      n.f0.accept(this);
+      n.f1.accept(this);
+      return _ret;
    }
 
    /**
@@ -598,87 +320,10 @@ public class GJNoArguDepthFirst<R> implements GJNoArguVisitor<R> {
    }
 
    /**
-    * f0 -> "true"
-    */
-   public R visit(TrueLiteral n) throws Exception {
-      return n.f0.accept(this);
-   }
-
-   /**
-    * f0 -> "false"
-    */
-   public R visit(FalseLiteral n) throws Exception {
-      return n.f0.accept(this);
-   }
-
-   /**
     * f0 -> <IDENTIFIER>
     */
-   public R visit(Identifier n) throws Exception {
+   public R visit(Label n) throws Exception {
       return n.f0.accept(this);
-   }
-
-   /**
-    * f0 -> "this"
-    */
-   public R visit(ThisExpression n) throws Exception {
-      return n.f0.accept(this);
-   }
-
-   /**
-    * f0 -> "new"
-    * f1 -> "int"
-    * f2 -> "["
-    * f3 -> Expression()
-    * f4 -> "]"
-    */
-   public R visit(ArrayAllocationExpression n) throws Exception {
-      R _ret=null;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      n.f2.accept(this);
-      n.f3.accept(this);
-      n.f4.accept(this);
-      return _ret;
-   }
-
-   /**
-    * f0 -> "new"
-    * f1 -> Identifier()
-    * f2 -> "("
-    * f3 -> ")"
-    */
-   public R visit(AllocationExpression n) throws Exception {
-      R _ret=null;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      n.f2.accept(this);
-      n.f3.accept(this);
-      return _ret;
-   }
-
-   /**
-    * f0 -> "!"
-    * f1 -> Clause()
-    */
-   public R visit(NotExpression n) throws Exception {
-      R _ret=null;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      return _ret;
-   }
-
-   /**
-    * f0 -> "("
-    * f1 -> Expression()
-    * f2 -> ")"
-    */
-   public R visit(BracketExpression n) throws Exception {
-      R _ret=null;
-      n.f0.accept(this);
-      n.f1.accept(this);
-      n.f2.accept(this);
-      return _ret;
    }
 
 }
