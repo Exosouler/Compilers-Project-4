@@ -1,8 +1,8 @@
 package semantic;
 
 import syntaxtree.*;
-import mjparser.MiniJavaParser;
-import mjparser.ParseException;
+import spigletParser.SpigletParser;
+import spigletParser.ParseException;
 import java.io.*;
 
 public class Main {
@@ -19,42 +19,32 @@ public class Main {
 				/* Output File */
 	           
 
-	            String[] parts = args[i].split("/");
-	            String input;
-	            if (parts!=null)
-	            	input = parts[parts.length-1];
-	            else
-	            	input = args[i];
-				int len = input.length() - 4;
-				String out_name = input.substring(0, len);
+	//           String[] parts = args[i].split("/");
+    //           String input;
+	 //           if (parts!=null)
+	//            	input = parts[parts.length-1];
+	 //           else
+	 //           	input = args[i];
+		//		int len = input.length() - 4;
+		//		String out_name = input.substring(0, len);
 				
-				File outputFILE = new File("./"+out_name+"spg");
-				if( !outputFILE.exists() )
-					outputFILE.createNewFile();
-				FileWriter fw = new FileWriter( outputFILE.getAbsoluteFile() );
-				BufferedWriter bw = new BufferedWriter(fw);	      
+		//		File outputFILE = new File("./"+out_name+"spg");
+		//		if( !outputFILE.exists() )
+		//			outputFILE.createNewFile();
+		//		FileWriter fw = new FileWriter( outputFILE.getAbsoluteFile() );
+		//		BufferedWriter bw = new BufferedWriter(fw);	      
 			   
-	            MiniJavaParser parser = new MiniJavaParser(fis);
+				SpigletParser parser = new SpigletParser(fis);
 	            
 	            Goal tree = parser.Goal();
 	            ClassesCheck ClassCheck =  new ClassesCheck();
 	            
 	            tree.accept(ClassCheck,null);
-	            VarMethod Phase2Check =  new VarMethod(ClassCheck.get_table());
-	           
-	            tree.accept(Phase2Check,null);
-	            
-	            vtables tables = new vtables(Phase2Check.getMethodOrder(),Phase2Check.getVarOrder());
-	            
-	            tree.accept(tables,null);
-	            spiglet Phase4Check =  new spiglet(ClassCheck.get_table(),Phase2Check.getMethodTable(),Phase2Check.getVarTable(),ClassCheck.get_maintable(),tables.getVtable(),tables.getVartable());
-	            tree.accept(Phase4Check,null);  	            
-	            String code;
-	            code = Phase4Check.getCode();
+
 	          //  System.out.println(code);
 				/* Write to output File */
-				bw.write(code);
-				bw.close();	            
+			//	bw.write(code);
+		//		bw.close();	            
 	        }
 	        catch(ParseException ex){
 	            System.out.println(ex.getMessage());

@@ -1,145 +1,302 @@
 package semantic;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import syntaxtree.ArrayType;
-import syntaxtree.BooleanType;
-import syntaxtree.ClassDeclaration;
-import syntaxtree.ClassExtendsDeclaration;
-import syntaxtree.Identifier;
-import syntaxtree.IntegerType;
-import syntaxtree.MainClass;
-import syntaxtree.VarDeclaration;
+
+import syntaxtree.BinOp;
+import syntaxtree.CJumpStmt;
+import syntaxtree.Call;
+import syntaxtree.ErrorStmt;
+import syntaxtree.Exp;
+import syntaxtree.HAllocate;
+import syntaxtree.HLoadStmt;
+import syntaxtree.HStoreStmt;
+import syntaxtree.IntegerLiteral;
+import syntaxtree.JumpStmt;
+import syntaxtree.Label;
+import syntaxtree.MoveStmt;
+import syntaxtree.NoOpStmt;
+import syntaxtree.Operator;
+import syntaxtree.PrintStmt;
+import syntaxtree.Procedure;
+import syntaxtree.SimpleExp;
+import syntaxtree.Stmt;
+import syntaxtree.StmtExp;
+import syntaxtree.StmtList;
+import syntaxtree.Temp;
 import visitor.GJVoidDepthFirst;
 import syntaxtree.Goal;
 
 
 public class ClassesCheck extends GJVoidDepthFirst<String>{
 
-	HashMap<String,String> Table = new HashMap<String,String>(); //Classes name, ExtendClass name (null if there isn't)
 	
-	HashMap<String,String> mainTable = new HashMap<String,String>(); //Var name,Var type for main
-
-	Goal syntaxtree;
-	String id;
-	String type;
-	
-	public HashMap<String,String> get_table(){
-		return this.Table;
+	ArrayList<String> instr = new ArrayList<String>();
+	ArrayList<String> var = new ArrayList<String>();
+	ArrayList<String> next = new ArrayList<String>();
+	ArrayList<String> varMove = new ArrayList<String>();
+	ArrayList<String> constMove = new ArrayList<String>();
+	ArrayList<String> varUse = new ArrayList<String>();
+	ArrayList<String> varDef = new ArrayList<String>();
+	int i_counter = 0;
+	public ArrayList<String> getInstr() {
+		return instr;
 	}
-	public HashMap<String,String> get_maintable(){
-		return this.mainTable;
-	}	
-	
-	/**
-	 * Grammar production:
-	 * f0 -> "class"
-	 * f1 -> Identifier()
-	 * f2 -> "{"
-	 * f3 -> "public"
-	 * f4 -> "static"
-	 * f5 -> "void"
-	 * f6 -> "main"
-	 * f7 -> "("
-	 * f8 -> "String"
-	 * f9 -> "["
-	 * f10 -> "]"
-	 * f11 -> Identifier()
-	 * f12 -> ")"
-	 * f13 -> "{"
-	 * f14 -> ( VarDeclaration() )*
-	 * f15 -> ( Statement() )*
-	 * f16 -> "}"
-	 * f17 -> "}"
-	 */
-	public void visit(MainClass n,String trash) throws Exception{
-		
-		this.mainTable.put(n.f11.f0.toString(), "Keyword String"); //put Argument Keyword String to table 
-		this.Table.put("!"+n.f1.f0.toString(), null); //put classname of class that contains main method
-													//!+classname : to void create object of that class
-		n.f14.accept(this,null);
-		
-		
-
+	public ArrayList<String> getVar() {
+		return var;
 	}
-	
-	/**
-	 * Grammar production:
-	 * f0 -> Type()
-	 * f1 -> Identifier()
-	 * f2 -> ";"
-	 */
-	public void visit(VarDeclaration n,String trash) throws Exception{
-	
-		String type;
-		n.f0.accept(this,null);
-		type = this.type;
-		n.f1.accept(this,null);
-		this.mainTable.put(n.f1.f0.toString(), type);
-		
+	public ArrayList<String> getNext() {
+		return next;
 	}
-
-	/**
-	* Grammar production:
-	* f0 -> "int"
-	*/
-	public void visit(IntegerType n, String trash) throws Exception{
-		this.type =  "int";
+	public ArrayList<String> getVarMove() {
+		return varMove;
 	}
-	   /**
-	* Grammar production:
-	* f0 -> "int"
-	* f1 -> "["
-	* f2 -> "]"
-	*/
-	public void visit(ArrayType n, String trash) throws Exception{
-		this.type = "int[]";
+	public ArrayList<String> getConstMove() {
+		return constMove;
 	}
-   
-   /**
-	* Grammar production:
-	* f0 -> "boolean"
-	*/
-   public void visit(BooleanType n, String trash) throws Exception{
-	   this.type = "boolean";
-   }
-   
-   
-   public void visit(Identifier n,String trash)  throws Exception
-   {		
-		this.type = n.f0.toString();
-	
-   }	   
+	public ArrayList<String> getVarUse() {
+		return varUse;
+	}
+	public ArrayList<String> getVarDef() {
+		return varDef;
+	}
 
    /**
-    * f0 -> "class"
-    * f1 -> Identifier()
-    * f2 -> "{"
-    * f3 -> ( VarDeclaration() )*
-    * f4 -> ( MethodDeclaration() )*
-    * f5 -> "}"
+    * f0 -> "MAIN"
+    * f1 -> StmtList()
+    * f2 -> "END"
+    * f3 -> ( Procedure() )*
+    * f4 -> <EOF>
     */
-	public void visit(ClassDeclaration n,String trash) throws Exception{
-	
-		this.Table.put(n.f1.f0.toString(), null); 
-	
-	}
-	
-	 /**
-	* f0 -> "class"
-	* f1 -> Identifier()
-	* f2 -> "extends"
-	* f3 -> Identifier()
-	* f4 -> "{"
-	* f5 -> ( VarDeclaration() )*
-	* f6 -> ( MethodDeclaration() )*
-	* f7 -> "}"
-	*/
-	public void visit(ClassExtendsDeclaration n,String trash) throws Exception
-	{
-		   
-	   this.Table.put(n.f1.f0.toString(), n.f3.f0.toString());
-	}
+   public void visit(Goal n, String _) throws Exception {
+	  String methodName = "MAIN";
+      n.f0.accept(this, methodName);
+      n.f1.accept(this, methodName);
+      n.f2.accept(this, methodName);
+      n.f3.accept(this, methodName);
+      n.f4.accept(this, methodName);
+   }
+
+   /**
+    * f0 -> ( ( Label() )? Stmt() )*
+    */
+   public void visit(StmtList n, String methodName) throws Exception {
+	  System.out.println("StmtList");
+      n.f0.accept(this, methodName);
+   }
+
+   /**
+    * f0 -> Label()
+    * f1 -> "["
+    * f2 -> IntegerLiteral()
+    * f3 -> "]"
+    * f4 -> StmtExp()
+    */
+   public void visit(Procedure n, String _) throws Exception {
+	  String methodName;
+      methodName = n.f0.f0.toString();
+      n.f1.accept(this, methodName);
+      n.f2.accept(this, methodName);
+      n.f3.accept(this, methodName);
+      n.f4.accept(this, methodName);
+   }
+
+   /**
+    * f0 -> NoOpStmt()
+    *       | ErrorStmt()
+    *       | CJumpStmt()
+    *       | JumpStmt()
+    *       | HStoreStmt()
+    *       | HLoadStmt()
+    *       | MoveStmt()
+    *       | PrintStmt()
+    */
+   public void visit(Stmt n, String methodName) throws Exception {
+      n.f0.accept(this, methodName);
+   }
+
+   /**
+    * f0 -> "NOOP"
+    */
+   public void visit(NoOpStmt n, String methodName) throws Exception {
+      n.f0.accept(this, methodName);
+   }
+
+   /**
+    * f0 -> "ERROR"
+    */
+   public void visit(ErrorStmt n, String methodName) throws Exception {
+      n.f0.accept(this, methodName);
+   }
+
+   /**
+    * f0 -> "CJUMP"
+    * f1 -> Temp()
+    * f2 -> Label()
+    */
+   public void visit(CJumpStmt n, String methodName) throws Exception {
+      n.f0.accept(this, methodName);
+      n.f1.accept(this, methodName);
+      n.f2.accept(this, methodName);
+   }
+
+   /**
+    * f0 -> "JUMP"
+    * f1 -> Label()
+    */
+   public void visit(JumpStmt n, String methodName) throws Exception {
+      n.f0.accept(this, methodName);
+      n.f1.accept(this, methodName);
+   }
+
+   /**
+    * f0 -> "HSTORE"
+    * f1 -> Temp()
+    * f2 -> IntegerLiteral()
+    * f3 -> Temp()
+    */
+   public void visit(HStoreStmt n, String methodName) throws Exception {
+      n.f0.accept(this, methodName);
+      n.f1.accept(this, methodName);
+      n.f2.accept(this, methodName);
+      n.f3.accept(this, methodName);
+   }
+
+   /**
+    * f0 -> "HLOAD"
+    * f1 -> Temp()
+    * f2 -> Temp()
+    * f3 -> IntegerLiteral()
+    */
+   public void visit(HLoadStmt n, String methodName) throws Exception {
+      n.f0.accept(this, methodName);
+      n.f1.accept(this, methodName);
+      n.f2.accept(this, methodName);
+      n.f3.accept(this, methodName);
+   }
+
+   /**
+    * f0 -> "MOVE"
+    * f1 -> Temp()
+    * f2 -> Exp()
+    */
+   public void visit(MoveStmt n, String methodName) throws Exception {
+      n.f0.accept(this, methodName);
+      n.f1.accept(this, methodName);
+      n.f2.accept(this, methodName);
+   }
+
+   /**
+    * f0 -> "PRINT"
+    * f1 -> SimpleExp()
+    */
+   public void visit(PrintStmt n, String methodName) throws Exception {
+      n.f0.accept(this, methodName);
+      n.f1.accept(this, methodName);
+   }
+
+   /**
+    * f0 -> Call()
+    *       | HAllocate()
+    *       | BinOp()
+    *       | SimpleExp()
+    */
+   public void visit(Exp n, String methodName) throws Exception {
+      n.f0.accept(this, methodName);
+   }
+
+   /**
+    * f0 -> "BEGIN"
+    * f1 -> StmtList()
+    * f2 -> "RETURN"
+    * f3 -> SimpleExp()
+    * f4 -> "END"
+    */
+   public void visit(StmtExp n, String methodName) throws Exception {
+      n.f0.accept(this, methodName);
+      n.f1.accept(this, methodName);
+      n.f2.accept(this, methodName);
+      n.f3.accept(this, methodName);
+      n.f4.accept(this, methodName);
+   }
+
+   /**
+    * f0 -> "CALL"
+    * f1 -> SimpleExp()
+    * f2 -> "("
+    * f3 -> ( Temp() )*
+    * f4 -> ")"
+    */
+   public void visit(Call n, String methodName) throws Exception {
+      n.f0.accept(this, methodName);
+      n.f1.accept(this, methodName);
+      n.f2.accept(this, methodName);
+      n.f3.accept(this, methodName);
+      n.f4.accept(this, methodName);
+   }
+
+   /**
+    * f0 -> "HALLOCATE"
+    * f1 -> SimpleExp()
+    */
+   public void visit(HAllocate n, String methodName) throws Exception {
+      n.f0.accept(this, methodName);
+      n.f1.accept(this, methodName);
+   }
+
+   /**
+    * f0 -> Operator()
+    * f1 -> Temp()
+    * f2 -> SimpleExp()
+    */
+   public void visit(BinOp n, String methodName) throws Exception {
+      n.f0.accept(this, methodName);
+      n.f1.accept(this, methodName);
+      n.f2.accept(this, methodName);
+   }
+
+   /**
+    * f0 -> "LT"
+    *       | "PLUS"
+    *       | "MINUS"
+    *       | "TIMES"
+    */
+   public void visit(Operator n, String methodName) throws Exception {
+      n.f0.accept(this, methodName);
+   }
+
+   /**
+    * f0 -> Temp()
+    *       | IntegerLiteral()
+    *       | Label()
+    */
+   public void visit(SimpleExp n, String methodName) throws Exception {
+      n.f0.accept(this, methodName);
+   }
+
+   /**
+    * f0 -> "TEMP"
+    * f1 -> IntegerLiteral()
+    */
+   public void visit(Temp n, String methodName) throws Exception {
+      n.f0.accept(this, methodName);
+      n.f1.accept(this, methodName);
+   }
+
+   /**
+    * f0 -> <INTEGER_LITERAL>
+    */
+   public void visit(IntegerLiteral n, String methodName) throws Exception {
+      n.f0.accept(this, methodName);
+   }
+
+   /**
+    * f0 -> <IDENTIFIER>
+    */
+   public void visit(Label n, String methodName) throws Exception {
+      n.f0.accept(this, methodName);
+   }
 
 	
 	
