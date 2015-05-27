@@ -151,8 +151,8 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
       else
     	  inst  = expr;
       instr.add("instruction(\""+methodName+"\", "+ i_counter+", \""+inst+"\").");
-      
-      next.add("next(\""+methodName+"\", "+i_counter+", "+(i_counter+1)+").");
+      if (jump==false)
+    	  next.add("next(\""+methodName+"\", "+i_counter+", "+(i_counter+1)+").");
       expr = "";
       
       labeled = false;
@@ -168,7 +168,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
       i_counter++;
      // instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+temp+"\").");
       expr = temp;
-      jump=true;
+      jump=false;
    }
 
    /**
@@ -181,7 +181,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
      // instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+temp+"\").");
       
       expr = temp;
-      jump=true;
+      jump=false;
    }
 
    /**
@@ -358,8 +358,10 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
       expr="";
       n.f2.accept(this, methodName);
       expr = "RETURN ";
-      n.f3.accept(this, methodName);
-      instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+expr+"\").");
+      ++i_counter;
+      
+      n.f3.accept(this, methodName);  
+      instr.add("instruction(\""+methodName+"\", "+ i_counter+", \""+expr+"\").");
       System.out.println("@"+expr);
       n.f4.accept(this, methodName);
    }
