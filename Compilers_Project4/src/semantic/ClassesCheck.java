@@ -247,12 +247,12 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
 	  //instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \"HSTORE TEMP " +n.f1.f1.f0.toString()+" "+n.f2.f0.toString() + " TEMP "+n.f3.f1.f0.toString()+"\").");
       i_counter++;
 	  n.f0.accept(this, methodName);
-      Def =true;
+  //    Def =true;
       n.f1.accept(this, methodName);
     //  System.out.println("varDef(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f1.f1.f0.toString()+"\")");
    //   varUse.add("varUse(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f1.f1.f0.toString()+"\")");
       n.f2.accept(this, methodName);
-      Def =true;
+  //    Def =true;
       n.f3.accept(this, methodName);
      // varDef.add("varDef(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f3.f1.f0.toString()+"\").");
       jump=false;
@@ -297,7 +297,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
       temp = expr;
       expr= "";
     //  var.add("var(\""+methodName+"\", \"TEMP "+n.f1.f1.f0.toString()+"\").");
-      varDef.add("varDef(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f1.f1.f0.toString()+"\").");
+      
       n.f2.accept(this, methodName);
       if (expr.length()>0)
     	  expr = expr.substring(0, expr.length()-1);
@@ -310,7 +310,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
       temp +=expr;
    //   System.out.println(temp);
       i_counter++;
-
+      varDef.add("varDef(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f1.f1.f0.toString()+"\").");
       expr = temp;
       jump=false;
       
