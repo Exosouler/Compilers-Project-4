@@ -243,7 +243,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     */
    public void visit(HLoadStmt n, String methodName) throws Exception {
 	  varDef.add("varDef(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f1.f1.f0.toString()+"\")."); 
-	  var.add("var(\""+methodName+"\", \"TEMP "+n.f1.f1.f0.toString()+"\").");
+//	  var.add("var(\""+methodName+"\", \"TEMP "+n.f1.f1.f0.toString()+"\").");
 	//  varUse.add("varUse(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f2.f1.f0.toString()+"\")"); 
 
 	  
@@ -269,7 +269,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
       n.f1.accept(this, methodName);
       temp = expr;
       expr= "";
-      var.add("var(\""+methodName+"\", \"TEMP "+n.f1.f1.f0.toString()+"\").");
+    //  var.add("var(\""+methodName+"\", \"TEMP "+n.f1.f1.f0.toString()+"\").");
       varDef.add("varDef(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f1.f1.f0.toString()+"\").");
       n.f2.accept(this, methodName);
       if (expr.length()>0)
@@ -394,6 +394,8 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
       n.f0.accept(this, methodName);
       expr += "TEMP ";
       n.f1.accept(this, methodName);
+      if (!var.contains("var(\""+methodName+"\", \"TEMP "+n.f1.f0.toString()+"\")."))
+    	  var.add("var(\""+methodName+"\", \"TEMP "+n.f1.f0.toString()+"\").");
       if (Def)
     	  Def = false;
       else
