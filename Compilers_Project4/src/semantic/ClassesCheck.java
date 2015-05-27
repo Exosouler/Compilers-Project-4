@@ -439,7 +439,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
       if (Def)
     	  Def = false;
       else
-    	  varUse.add("varUse(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f1.f0.toString()+"\")"); 
+    	  varUse.add("varUse(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f1.f0.toString()+"\")."); 
     
       Const = 0;
    }
