@@ -81,6 +81,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
 	  String methodName = "MAIN";
       n.f0.accept(this, methodName);
       n.f1.accept(this, methodName);
+      next.remove(next.size()-1);
       n.f2.accept(this, methodName);
       n.f3.accept(this, methodName);
       n.f4.accept(this, methodName);
@@ -104,10 +105,12 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
    public void visit(Procedure n, String _) throws Exception {
 	  String methodName;
       methodName = n.f0.f0.toString();
+      i_counter = 0;
       n.f1.accept(this, methodName);
       n.f2.accept(this, methodName);
       n.f3.accept(this, methodName);
       n.f4.accept(this, methodName);
+  //    next.remove(next.size()-1);
    }
 
    /**
@@ -121,6 +124,11 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     *       | PrintStmt()
     */
    public void visit(Stmt n, String methodName) throws Exception {
+	  String label="",inst="";
+	  label = expr;
+	  
+	  label = expr;
+	  System.out.println(label);
 	  jump=false;
 	  if (labeled==true){
 	      findLabel(expr,methodName);
@@ -133,10 +141,16 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
 	      }
 	      jump = true;
 	  }
-		 
+	  expr="";	 
       n.f0.accept(this, methodName);
-      if (jump ==false)
-    	  next.add("next(\""+methodName+"\", "+i_counter+", "+(i_counter+1)+").");
+      System.out.println(expr);
+      if (!label.equals(""))
+    	  inst = label+" "+expr;
+      else
+    	  inst  = expr;
+      instr.add("instruction(\""+methodName+"\", "+ i_counter+", \""+inst+"\").");
+      
+      next.add("next(\""+methodName+"\", "+i_counter+", "+(i_counter+1)+").");
       expr = "";
       
       labeled = false;
@@ -149,7 +163,9 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
 	  
       n.f0.accept(this, methodName);
       String temp = "NOOP";
-      instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+temp+"\").");
+      i_counter++;
+     // instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+temp+"\").");
+      expr = temp;
       jump=true;
    }
 
@@ -159,7 +175,10 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
    public void visit(ErrorStmt n, String methodName) throws Exception {
       n.f0.accept(this, methodName);
       String temp = "ERROR";
-      instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+temp+"\").");
+      i_counter++;
+     // instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+temp+"\").");
+      
+      expr = temp;
       jump=true;
    }
 
@@ -180,9 +199,10 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     	  expr = expr.substring(0, expr.length()-1);      
       System.out.println("$|"+expr+"|");  
       temp +=expr;
-      
-	  instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+temp+"\").");
+      i_counter++;
+	//  instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+temp+"\").");
 	  cjumps.put(expr,i_counter);
+	  expr = temp;
 	  jump=false;
    }
 
@@ -200,7 +220,8 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     	  expr = expr.substring(0, expr.length()-1);      
       
       temp +=expr;
-      instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+temp+"\").");
+      i_counter++;
+  //    instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+temp+"\").");
       if (labels.containsKey(expr)){
     	 int counter = labels.get(expr);
 		 element = "next(\""+methodName+"\", "+i_counter+", "+counter+").";
@@ -211,6 +232,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     	  jump=false;
       System.out.println("$|"+expr+"|");  
       jumps.put(expr,i_counter);
+      expr = temp;
      
    }
 
@@ -221,8 +243,10 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     * f3 -> Temp()
     */
    public void visit(HStoreStmt n, String methodName) throws Exception {
-	  instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \"HSTORE TEMP " +n.f1.f1.f0.toString()+" "+n.f2.f0.toString() + " TEMP "+n.f3.f1.f0.toString()+"\").");
-      n.f0.accept(this, methodName);
+	   
+	  //instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \"HSTORE TEMP " +n.f1.f1.f0.toString()+" "+n.f2.f0.toString() + " TEMP "+n.f3.f1.f0.toString()+"\").");
+      i_counter++;
+	  n.f0.accept(this, methodName);
       Def =true;
       n.f1.accept(this, methodName);
     //  System.out.println("varDef(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f1.f1.f0.toString()+"\")");
@@ -232,6 +256,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
       n.f3.accept(this, methodName);
      // varDef.add("varDef(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f3.f1.f0.toString()+"\").");
       jump=false;
+      expr = "HSTORE TEMP " +n.f1.f1.f0.toString()+" "+n.f2.f0.toString() + " TEMP "+n.f3.f1.f0.toString();
     //  System.out.println(instr);
    }
 
@@ -242,17 +267,19 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     * f3 -> IntegerLiteral()
     */
    public void visit(HLoadStmt n, String methodName) throws Exception {
+	  
 	  varDef.add("varDef(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f1.f1.f0.toString()+"\")."); 
 //	  var.add("var(\""+methodName+"\", \"TEMP "+n.f1.f1.f0.toString()+"\").");
 	//  varUse.add("varUse(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f2.f1.f0.toString()+"\")"); 
 
-	  
-	  instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \"HLOAD TEMP " +n.f1.f1.f0.toString() + " TEMP "+n.f2.f1.f0.toString()+" "+ n.f3.f0.toString()+"\").");
+	  i_counter++;
+//	  instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \"HLOAD TEMP " +n.f1.f1.f0.toString() + " TEMP "+n.f2.f1.f0.toString()+" "+ n.f3.f0.toString()+"\").");
       n.f0.accept(this, methodName);
       Def = true;
       n.f1.accept(this, methodName);
       n.f2.accept(this, methodName);
       n.f3.accept(this, methodName);
+      expr = "HLOAD TEMP " +n.f1.f1.f0.toString() + " TEMP "+n.f2.f1.f0.toString()+" "+ n.f3.f0.toString();
       jump=false;
    }
 
@@ -281,8 +308,10 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     	  constMove.add("constMove(\""+methodName+"\", "+i_counter+ ",\"TEMP "+n.f1.f1.f0.toString()+"\", \""+expr+"\").");
       Const = -1;
       temp +=expr;
-      System.out.println(temp);
-      instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+temp+"\").");
+   //   System.out.println(temp);
+      i_counter++;
+
+      expr = temp;
       jump=false;
       
    }
@@ -295,7 +324,8 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
 	  expr = "PRINT ";
       n.f0.accept(this, methodName);
       n.f1.accept(this, methodName);
-      instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+expr+"\").");
+      i_counter++;
+    //  instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+expr+"\").");
       jump=false;
    }
 
@@ -319,8 +349,12 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
    public void visit(StmtExp n, String methodName) throws Exception {
       n.f0.accept(this, methodName);
       n.f1.accept(this, methodName);
+      expr="";
       n.f2.accept(this, methodName);
+      expr = "RETURN ";
       n.f3.accept(this, methodName);
+      instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+expr+"\").");
+      System.out.println("@"+expr);
       n.f4.accept(this, methodName);
    }
 
@@ -332,7 +366,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     * f4 -> ")"
     */
    public void visit(Call n, String methodName) throws Exception {
-	  expr += "CALL ";
+	  expr = "CALL ";
       n.f0.accept(this, methodName);
       n.f1.accept(this, methodName);
       expr +="( ";
@@ -348,7 +382,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     * f1 -> SimpleExp()
     */
    public void visit(HAllocate n, String methodName) throws Exception {
-	  expr += "HALLOCATE ";
+	  expr = "HALLOCATE ";
       n.f0.accept(this, methodName);
       n.f1.accept(this, methodName);
       Const = -1;
