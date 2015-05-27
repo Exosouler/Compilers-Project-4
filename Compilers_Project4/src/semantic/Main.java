@@ -3,7 +3,10 @@ package semantic;
 import syntaxtree.*;
 import spigletParser.SpigletParser;
 import spigletParser.ParseException;
+
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Main {
     public static void main (String [] args){
@@ -40,7 +43,14 @@ public class Main {
 	            ClassesCheck ClassCheck =  new ClassesCheck();
 	            
 	            tree.accept(ClassCheck,null);
-
+	            System.out.println(ClassCheck.getInstr());
+	            Save(ClassCheck.getInstr(),"instructions");
+	            Save(ClassCheck.getNext(),"next");
+	            Save(ClassCheck.getVarUse(),"varUse");
+	            Save(ClassCheck.getVar(),"var");
+	            Save(ClassCheck.getVarDef(),"varDef");
+	            Save(ClassCheck.getVarMove(),"varMove");
+	            Save(ClassCheck.getConstMove(),"constMove");
 	          //  System.out.println(code);
 				/* Write to output File */
 			//	bw.write(code);
@@ -66,6 +76,34 @@ public class Main {
 	                System.err.println(ex.getMessage());
 	            }
 	        }
-    } 
+    	} 
+    }
+
+   
+    public static void Save(ArrayList<String> array,String filename){
+    	String code = "";
+        try{
+			File outputFILE = new File("./"+filename+".iris");
+			if( !outputFILE.exists() )
+				outputFILE.createNewFile();
+			FileWriter fw = new FileWriter( outputFILE.getAbsoluteFile() );
+			BufferedWriter bw = new BufferedWriter(fw);
+			
+			Iterator<String> pargs = array.iterator();
+			String arg;
+			while (pargs.hasNext()){
+				arg = pargs.next();
+				code +=arg;
+				code +="\n";
+			}
+			System.out.println(code);
+			bw.write(code);
+			bw.close();	  			
+        }
+		catch(Exception e){
+			System.out.println("Internal Error.");
+		}
+
+		
     }
 }

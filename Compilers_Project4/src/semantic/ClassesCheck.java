@@ -39,7 +39,13 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
 	ArrayList<String> constMove = new ArrayList<String>();
 	ArrayList<String> varUse = new ArrayList<String>();
 	ArrayList<String> varDef = new ArrayList<String>();
+	HashMap<String,Integer>cjumps = new HashMap<String,Integer>();
+	HashMap<String,Integer>jumps = new HashMap<String,Integer>();
 	int i_counter = 0;
+	boolean Def = false;
+	boolean jump = false;
+	int Const = -1;
+	String expr = "";
 	public ArrayList<String> getInstr() {
 		return instr;
 	}
@@ -113,7 +119,10 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     *       | PrintStmt()
     */
    public void visit(Stmt n, String methodName) throws Exception {
+	  jump=false;
       n.f0.accept(this, methodName);
+      if (jump ==false)
+    	  next.add("next(\""+methodName+"\", "+i_counter+", "+(i_counter+1)+").");
    }
 
    /**
@@ -121,6 +130,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     */
    public void visit(NoOpStmt n, String methodName) throws Exception {
       n.f0.accept(this, methodName);
+      jump=true;
    }
 
    /**
@@ -128,6 +138,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     */
    public void visit(ErrorStmt n, String methodName) throws Exception {
       n.f0.accept(this, methodName);
+      jump=true;
    }
 
    /**
@@ -136,9 +147,18 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     * f2 -> Label()
     */
    public void visit(CJumpStmt n, String methodName) throws Exception {
+	  String temp;
+	  expr = "CJUMP ";
       n.f0.accept(this, methodName);
       n.f1.accept(this, methodName);
+      temp = expr;
+      expr = "";
       n.f2.accept(this, methodName);
+      cjumps.put(expr,i_counter);
+      temp +=expr;
+      
+	  instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+temp+"\").");
+	  jump=false;
    }
 
    /**
@@ -146,8 +166,15 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     * f1 -> Label()
     */
    public void visit(JumpStmt n, String methodName) throws Exception {
+	  String temp;
+	  temp = "JUMP ";	 
+	  expr = "";
       n.f0.accept(this, methodName);
       n.f1.accept(this, methodName);
+      jumps.put(expr,i_counter);
+      temp +=expr;
+      instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+temp+"\").");
+      jump=false;
    }
 
    /**
@@ -157,10 +184,17 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     * f3 -> Temp()
     */
    public void visit(HStoreStmt n, String methodName) throws Exception {
+	  instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \"HSTORE TEMP " +n.f1.f1.f0.toString()+" "+n.f2.f0.toString() + " TEMP "+n.f3.f1.f0.toString()+"\").");
       n.f0.accept(this, methodName);
+      Def =true;
       n.f1.accept(this, methodName);
+    //  System.out.println("varDef(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f1.f1.f0.toString()+"\")");
+   //   varUse.add("varUse(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f1.f1.f0.toString()+"\")");
       n.f2.accept(this, methodName);
       n.f3.accept(this, methodName);
+      varDef.add("varDef(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f3.f1.f0.toString()+"\").");
+      jump=false;
+    //  System.out.println(instr);
    }
 
    /**
@@ -170,10 +204,18 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     * f3 -> IntegerLiteral()
     */
    public void visit(HLoadStmt n, String methodName) throws Exception {
+	  varDef.add("varDef(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f1.f1.f0.toString()+"\")."); 
+	  var.add("var(\""+methodName+"\", \"TEMP "+n.f1.f1.f0.toString()+"\").");
+	//  varUse.add("varUse(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f2.f1.f0.toString()+"\")"); 
+
+	  
+	  instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \"HLOAD TEMP " +n.f1.f1.f0.toString() + " TEMP "+n.f2.f1.f0.toString()+" "+ n.f3.f0.toString()+"\").");
       n.f0.accept(this, methodName);
+      Def = true;
       n.f1.accept(this, methodName);
       n.f2.accept(this, methodName);
       n.f3.accept(this, methodName);
+      jump=false;
    }
 
    /**
@@ -182,9 +224,29 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     * f2 -> Exp()
     */
    public void visit(MoveStmt n, String methodName) throws Exception {
+	  String temp = "";
       n.f0.accept(this, methodName);
+      expr = "MOVE ";
+      Def = true;
       n.f1.accept(this, methodName);
+      temp = expr;
+      expr= "";
+      var.add("var(\""+methodName+"\", \"TEMP "+n.f1.f1.f0.toString()+"\").");
+      varDef.add("varDef(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f1.f1.f0.toString()+"\").");
       n.f2.accept(this, methodName);
+      if (expr.length()>0)
+    	  expr = expr.substring(0, expr.length()-1);
+      
+      if (Const==1)
+    	  varMove.add("varMove(\""+methodName+"\", "+i_counter+ ",\"TEMP "+n.f1.f1.f0.toString()+"\", \""+expr+"\").");
+      else if (Const==0)
+    	  constMove.add("constMove(\""+methodName+"\", "+i_counter+ ",\"TEMP "+n.f1.f1.f0.toString()+"\", \""+expr+"\").");
+      Const = -1;
+      temp +=expr;
+      System.out.println(temp);
+      instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+temp+"\").");
+      jump=false;
+      
    }
 
    /**
@@ -192,8 +254,11 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     * f1 -> SimpleExp()
     */
    public void visit(PrintStmt n, String methodName) throws Exception {
+	  expr = "PRINT ";
       n.f0.accept(this, methodName);
       n.f1.accept(this, methodName);
+      instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+expr+"\").");
+      jump=false;
    }
 
    /**
@@ -229,11 +294,15 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     * f4 -> ")"
     */
    public void visit(Call n, String methodName) throws Exception {
+	  expr += "CALL ";
       n.f0.accept(this, methodName);
       n.f1.accept(this, methodName);
+      expr +="( ";
       n.f2.accept(this, methodName);
       n.f3.accept(this, methodName);
       n.f4.accept(this, methodName);
+      expr +=") ";
+      Const = -1;
    }
 
    /**
@@ -241,8 +310,10 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     * f1 -> SimpleExp()
     */
    public void visit(HAllocate n, String methodName) throws Exception {
+	  expr += "HALLOCATE ";
       n.f0.accept(this, methodName);
       n.f1.accept(this, methodName);
+      Const = -1;
    }
 
    /**
@@ -254,6 +325,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
       n.f0.accept(this, methodName);
       n.f1.accept(this, methodName);
       n.f2.accept(this, methodName);
+      Const = -1;
    }
 
    /**
@@ -263,6 +335,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     *       | "TIMES"
     */
    public void visit(Operator n, String methodName) throws Exception {
+	  expr += n.f0.choice.toString()+ " ";
       n.f0.accept(this, methodName);
    }
 
@@ -281,7 +354,14 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     */
    public void visit(Temp n, String methodName) throws Exception {
       n.f0.accept(this, methodName);
+      expr += "TEMP ";
       n.f1.accept(this, methodName);
+      if (Def)
+    	  Def = false;
+      else
+    	  varUse.add("varUse(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f1.f0.toString()+"\")"); 
+    
+      Const = 0;
    }
 
    /**
@@ -289,13 +369,18 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     */
    public void visit(IntegerLiteral n, String methodName) throws Exception {
       n.f0.accept(this, methodName);
+      expr += n.f0.toString()+" ";
+      Const =1;
    }
 
    /**
     * f0 -> <IDENTIFIER>
     */
    public void visit(Label n, String methodName) throws Exception {
+	  Const = -1;
+	  expr +=n.f0.toString()+ " ";
       n.f0.accept(this, methodName);
+      jump=true;
    }
 
 	
