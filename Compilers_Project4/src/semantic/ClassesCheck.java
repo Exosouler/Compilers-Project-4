@@ -191,7 +191,8 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     */
    public void visit(CJumpStmt n, String methodName) throws Exception {
 	  String temp;
-	  expr = "CJUMP ";
+	  expr = "CJUMP "; 
+	  i_counter++;
       n.f0.accept(this, methodName);
       n.f1.accept(this, methodName);
       temp = expr;
@@ -201,7 +202,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     	  expr = expr.substring(0, expr.length()-1);      
       System.out.println("$|"+expr+"|");  
       temp +=expr;
-      i_counter++;
+     
 	//  instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+temp+"\").");
 	  cjumps.put(expr,i_counter);
 	  expr = temp;
@@ -216,13 +217,14 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
 	  String temp,element="";
 	  temp = "JUMP ";	 
 	  expr = "";
+	  i_counter++;
       n.f0.accept(this, methodName);
       n.f1.accept(this, methodName);
       if (expr.length()>0)
     	  expr = expr.substring(0, expr.length()-1);      
       
       temp +=expr;
-      i_counter++;
+     
   //    instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+temp+"\").");
       if (labels.containsKey(expr)){
     	 int counter = labels.get(expr);
@@ -300,7 +302,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
       temp = expr;
       expr= "";
     //  var.add("var(\""+methodName+"\", \"TEMP "+n.f1.f1.f0.toString()+"\").");
-      
+      i_counter++;
       n.f2.accept(this, methodName);
       if (expr.length()>0)
     	  expr = expr.substring(0, expr.length()-1);
@@ -312,7 +314,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
       Const = -1;
       temp +=expr;
    //   System.out.println(temp);
-      i_counter++;
+      
       varDef.add("varDef(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f1.f1.f0.toString()+"\").");
       expr = temp;
       jump=false;
@@ -325,9 +327,10 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     */
    public void visit(PrintStmt n, String methodName) throws Exception {
 	  expr = "PRINT ";
+	  i_counter++;
       n.f0.accept(this, methodName);
       n.f1.accept(this, methodName);
-      i_counter++;
+    
     //  instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+expr+"\").");
       jump=false;
    }

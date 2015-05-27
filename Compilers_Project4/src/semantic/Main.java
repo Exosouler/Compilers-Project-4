@@ -12,7 +12,7 @@ public class Main {
     public static void main (String [] args){
 
     	int i;
-    	//Test commit
+    	boolean theDir = new File("./generated-facts").mkdirs();
     	for (i=0;i<args.length;i++){
 
 	        FileInputStream fis = null;
@@ -44,16 +44,16 @@ public class Main {
 	            
 	            tree.accept(ClassCheck,null);
 	            System.out.println(ClassCheck.getInstr());
-	            boolean theDir = new File("./"+out_name +"/facts").mkdirs();
+	            theDir = new File("./generated-facts/"+out_name +"/").mkdirs();
 
 	            System.out.println("./"+out_name +"/facts");
-	            Save(ClassCheck.getInstr(),"instructions","./"+out_name+"/facts");
-	            Save(ClassCheck.getNext(),"next","./"+out_name+"/facts");
-	            Save(ClassCheck.getVarUse(),"varUse","./"+out_name+"/facts");
-	            Save(ClassCheck.getVar(),"var","./"+out_name+"/facts");
-	            Save(ClassCheck.getVarDef(),"varDef","./"+out_name+"/facts");
-	            Save(ClassCheck.getVarMove(),"varMove","./"+out_name+"/facts");
-	            Save(ClassCheck.getConstMove(),"constMove","./"+out_name+"/facts");
+	            Save(ClassCheck.getInstr(),"instructions","./generated-facts/"+out_name +"/");
+	            Save(ClassCheck.getNext(),"next","./generated-facts/"+out_name +"/");
+	            Save(ClassCheck.getVarUse(),"varUse","./generated-facts/"+out_name +"/");
+	            Save(ClassCheck.getVar(),"var","./generated-facts/"+out_name +"/");
+	            Save(ClassCheck.getVarDef(),"varDef","./generated-facts/"+out_name +"/");
+	            Save(ClassCheck.getVarMove(),"varMove","./generated-facts/"+out_name +"/");
+	            Save(ClassCheck.getConstMove(),"constMove","./generated-facts/"+out_name +"/");
 	          //  System.out.println(code);
 				/* Write to output File */
 			//	bw.write(code);
