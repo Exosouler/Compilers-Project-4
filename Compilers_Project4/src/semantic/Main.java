@@ -96,7 +96,7 @@ public class Main {
 				code +=arg;
 				code +="\n";
 			}
-			System.out.println(code);
+			
 			bw.write(code);
 			bw.close();	  			
         }

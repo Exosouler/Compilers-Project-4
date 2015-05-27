@@ -41,6 +41,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
 	ArrayList<String> varDef = new ArrayList<String>();
 	HashMap<String,Integer>cjumps = new HashMap<String,Integer>();
 	HashMap<String,Integer>jumps = new HashMap<String,Integer>();
+	HashMap<String,Integer>labels = new HashMap<String,Integer>();
 	int i_counter = 0;
 	boolean Def = false;
 	boolean jump = false;
@@ -123,13 +124,23 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
       n.f0.accept(this, methodName);
       if (jump ==false)
     	  next.add("next(\""+methodName+"\", "+i_counter+", "+(i_counter+1)+").");
+      expr = "";
    }
 
    /**
     * f0 -> "NOOP"
     */
    public void visit(NoOpStmt n, String methodName) throws Exception {
+	  
       n.f0.accept(this, methodName);
+      findLabel(expr,methodName);
+      if (expr.length()>0)
+    	  expr = expr.substring(0, expr.length()-1);      
+      if (!cjumps.containsKey(expr) && !jumps.containsKey(expr)){
+    	  
+    	  System.out.println("*********"+expr);
+    	  labels.put(expr, i_counter+1);
+      }
       jump=true;
    }
 
@@ -138,6 +149,8 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     */
    public void visit(ErrorStmt n, String methodName) throws Exception {
       n.f0.accept(this, methodName);
+      String temp = "ERROR";
+      instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+temp+"\").");
       jump=true;
    }
 
@@ -154,10 +167,13 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
       temp = expr;
       expr = "";
       n.f2.accept(this, methodName);
-      cjumps.put(expr,i_counter);
+      if (expr.length()>0)
+    	  expr = expr.substring(0, expr.length()-1);      
+      System.out.println("$|"+expr+"|");  
       temp +=expr;
       
 	  instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+temp+"\").");
+	  cjumps.put(expr,i_counter);
 	  jump=false;
    }
 
@@ -166,15 +182,27 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     * f1 -> Label()
     */
    public void visit(JumpStmt n, String methodName) throws Exception {
-	  String temp;
+	  String temp,element="";
 	  temp = "JUMP ";	 
 	  expr = "";
       n.f0.accept(this, methodName);
       n.f1.accept(this, methodName);
-      jumps.put(expr,i_counter);
+      if (expr.length()>0)
+    	  expr = expr.substring(0, expr.length()-1);      
+      
       temp +=expr;
       instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+temp+"\").");
-      jump=false;
+      if (labels.containsKey(expr)){
+    	 int counter = labels.get(expr);
+		 element = "next(\""+methodName+"\", "+i_counter+", "+counter+").";
+		 next.add(element);	
+		 jump = true;
+      }
+      else
+    	  jump=false;
+      System.out.println("$|"+expr+"|");  
+      jumps.put(expr,i_counter);
+     
    }
 
    /**
@@ -372,7 +400,38 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
       expr += n.f0.toString()+" ";
       Const =1;
    }
-
+   public void findLabel(String label,String methodName) throws Exception {
+	  int counter;
+	  int index;
+	  String element="";
+	  String Label="";
+      if (label.length()>0)
+    	  Label = label.substring(0, label.length()-1);
+      else
+    	  Label = label;
+	  System.out.println("?|"+label+"|"); 
+	  if (cjumps.containsKey(Label)){
+		  System.out.println("Bhka\n");
+		  counter = cjumps.get(Label);
+		  System.out.println(counter);
+		  element = "next(\""+methodName+"\", "+counter+", "+(counter+1)+").";
+		  index = next.indexOf(element);
+		  element = "next(\""+methodName+"\", "+counter+", "+(i_counter+1)+").";
+		  next.add(index+1,element);
+		  
+	  }
+	  else if (jumps.containsKey(Label)){
+		  counter = jumps.get(Label);
+		  element = "next(\""+methodName+"\", "+counter+", "+(counter+1)+").";
+		  System.out.print("%%"+element);
+		  index = next.indexOf(element);
+		  next.remove(index);
+		  element = "next(\""+methodName+"\", "+counter+", "+(i_counter+1)+").";
+		  next.add(index,element);		  
+	  }
+		  
+	   
+   }
    /**
     * f0 -> <IDENTIFIER>
     */
