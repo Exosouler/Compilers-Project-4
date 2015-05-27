@@ -19,7 +19,7 @@ instruction("MAIN", 18, "HLOAD TEMP 36 TEMP 35 0").
 instruction("MAIN", 19, "MOVE TEMP 37 10").
 instruction("MAIN", 20, "MOVE TEMP 38 CALL TEMP 36 ( TEMP 34 TEMP 37 )").
 instruction("MAIN", 21, "PRINT TEMP 38 ").
-instruction("BBS_Start", 1, "2  MOVE TEMP 51 TEMP 0").
+instruction("BBS_Start", 1, "MOVE TEMP 51 TEMP 0").
 instruction("BBS_Start", 2, "HLOAD TEMP 52 TEMP 51 0").
 instruction("BBS_Start", 3, "HLOAD TEMP 53 TEMP 52 12").
 instruction("BBS_Start", 4, "MOVE TEMP 54 CALL TEMP 53 ( TEMP 51 TEMP 1 )").
@@ -43,7 +43,7 @@ instruction("BBS_Start", 21, "MOVE TEMP 67 CALL TEMP 66 ( TEMP 64 )").
 instruction("BBS_Start", 22, "MOVE TEMP 40 TEMP 67").
 instruction("BBS_Start", 23, "MOVE TEMP 68 0").
 instruction("BBS_Start", 24, "RETURN TEMP 68 ").
-instruction("BBS_Sort", 1, "RETURN TEMP 68 1  MOVE TEMP 88 TEMP 0").
+instruction("BBS_Sort", 1, "MOVE TEMP 88 TEMP 0").
 instruction("BBS_Sort", 2, "HLOAD TEMP 89 TEMP 88 8").
 instruction("BBS_Sort", 3, "MOVE TEMP 90 1").
 instruction("BBS_Sort", 4, "MOVE TEMP 91 MINUS TEMP 89 TEMP 90").
@@ -176,7 +176,7 @@ instruction("BBS_Sort", 130, "JUMP L2").
 instruction("BBS_Sort", 131, "L3  NOOP").
 instruction("BBS_Sort", 132, "MOVE TEMP 170 0").
 instruction("BBS_Sort", 133, "RETURN TEMP 170 ").
-instruction("BBS_Print", 1, "RETURN TEMP 170 1  MOVE TEMP 182 0").
+instruction("BBS_Print", 1, "MOVE TEMP 182 0").
 instruction("BBS_Print", 2, "MOVE TEMP 171 TEMP 182").
 instruction("BBS_Print", 3, "L16  NOOP").
 instruction("BBS_Print", 4, "MOVE TEMP 183 TEMP 0").
@@ -204,7 +204,7 @@ instruction("BBS_Print", 25, "JUMP L16").
 instruction("BBS_Print", 26, "L17  NOOP").
 instruction("BBS_Print", 27, "MOVE TEMP 198 0").
 instruction("BBS_Print", 28, "RETURN TEMP 198 ").
-instruction("BBS_Init", 1, "RETURN TEMP 198 2  MOVE TEMP 210 TEMP 0").
+instruction("BBS_Init", 1, "MOVE TEMP 210 TEMP 0").
 instruction("BBS_Init", 2, "HSTORE TEMP 210 8 TEMP 1").
 instruction("BBS_Init", 3, "MOVE TEMP 211 PLUS TEMP 1 1").
 instruction("BBS_Init", 4, "MOVE TEMP 212 TIMES TEMP 211 4").

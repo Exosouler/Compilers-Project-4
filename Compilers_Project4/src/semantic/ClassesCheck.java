@@ -104,11 +104,13 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     */
    public void visit(Procedure n, String _) throws Exception {
 	  String methodName;
+	  expr = "";
       methodName = n.f0.f0.toString();
       i_counter = 0;
       n.f1.accept(this, methodName);
       n.f2.accept(this, methodName);
       n.f3.accept(this, methodName);
+      expr = "";
       n.f4.accept(this, methodName);
   //    next.remove(next.size()-1);
    }
