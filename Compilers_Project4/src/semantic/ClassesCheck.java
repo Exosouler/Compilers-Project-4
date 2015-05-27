@@ -268,11 +268,12 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     */
    public void visit(HLoadStmt n, String methodName) throws Exception {
 	  
-	  varDef.add("varDef(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f1.f1.f0.toString()+"\")."); 
 //	  var.add("var(\""+methodName+"\", \"TEMP "+n.f1.f1.f0.toString()+"\").");
 	//  varUse.add("varUse(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f2.f1.f0.toString()+"\")"); 
 
 	  i_counter++;
+	  varDef.add("varDef(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f1.f1.f0.toString()+"\")."); 
+	  
 //	  instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \"HLOAD TEMP " +n.f1.f1.f0.toString() + " TEMP "+n.f2.f1.f0.toString()+" "+ n.f3.f0.toString()+"\").");
       n.f0.accept(this, methodName);
       Def = true;
