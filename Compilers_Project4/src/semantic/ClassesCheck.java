@@ -44,6 +44,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
 	HashMap<String,Integer>labels = new HashMap<String,Integer>();
 	int i_counter = 0;
 	boolean Def = false;
+	boolean labeled=false;
 	boolean jump = false;
 	int Const = -1;
 	String expr = "";
@@ -121,10 +122,24 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     */
    public void visit(Stmt n, String methodName) throws Exception {
 	  jump=false;
+	  if (labeled==true){
+	      findLabel(expr,methodName);
+	      if (expr.length()>0)
+	    	  expr = expr.substring(0, expr.length()-1);      
+	      if (!cjumps.containsKey(expr) && !jumps.containsKey(expr)){
+	    	  
+	    	  System.out.println("*********"+expr);
+	    	  labels.put(expr, i_counter+1);
+	      }
+	      jump = true;
+	  }
+		 
       n.f0.accept(this, methodName);
       if (jump ==false)
     	  next.add("next(\""+methodName+"\", "+i_counter+", "+(i_counter+1)+").");
       expr = "";
+      
+      labeled = false;
    }
 
    /**
@@ -133,14 +148,8 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
    public void visit(NoOpStmt n, String methodName) throws Exception {
 	  
       n.f0.accept(this, methodName);
-      findLabel(expr,methodName);
-      if (expr.length()>0)
-    	  expr = expr.substring(0, expr.length()-1);      
-      if (!cjumps.containsKey(expr) && !jumps.containsKey(expr)){
-    	  
-    	  System.out.println("*********"+expr);
-    	  labels.put(expr, i_counter+1);
-      }
+      String temp = "NOOP";
+      instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+temp+"\").");
       jump=true;
    }
 
@@ -219,8 +228,9 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     //  System.out.println("varDef(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f1.f1.f0.toString()+"\")");
    //   varUse.add("varUse(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f1.f1.f0.toString()+"\")");
       n.f2.accept(this, methodName);
+      Def =true;
       n.f3.accept(this, methodName);
-      varDef.add("varDef(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f3.f1.f0.toString()+"\").");
+     // varDef.add("varDef(\""+methodName+"\", "+i_counter+", \"TEMP "+n.f3.f1.f0.toString()+"\").");
       jump=false;
     //  System.out.println(instr);
    }
@@ -265,9 +275,9 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
       if (expr.length()>0)
     	  expr = expr.substring(0, expr.length()-1);
       
-      if (Const==1)
+      if (Const==0)
     	  varMove.add("varMove(\""+methodName+"\", "+i_counter+ ",\"TEMP "+n.f1.f1.f0.toString()+"\", \""+expr+"\").");
-      else if (Const==0)
+      else if (Const==1)
     	  constMove.add("constMove(\""+methodName+"\", "+i_counter+ ",\"TEMP "+n.f1.f1.f0.toString()+"\", \""+expr+"\").");
       Const = -1;
       temp +=expr;
@@ -440,6 +450,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
 	  expr +=n.f0.toString()+ " ";
       n.f0.accept(this, methodName);
       jump=true;
+      labeled=true;
    }
 
 	

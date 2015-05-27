@@ -22,14 +22,14 @@ public class Main {
 				/* Output File */
 	           
 
-	//           String[] parts = args[i].split("/");
-    //           String input;
-	 //           if (parts!=null)
-	//            	input = parts[parts.length-1];
-	 //           else
-	 //           	input = args[i];
-		//		int len = input.length() - 4;
-		//		String out_name = input.substring(0, len);
+	         String[] parts = args[i].split("/");
+             String input;
+	         if (parts!=null)
+	        	 input = parts[parts.length-1];
+	         else
+	        	 input = args[i];
+	         int len = input.length() - 4;
+			 String out_name = input.substring(0, len);
 				
 		//		File outputFILE = new File("./"+out_name+"spg");
 		//		if( !outputFILE.exists() )
@@ -44,13 +44,16 @@ public class Main {
 	            
 	            tree.accept(ClassCheck,null);
 	            System.out.println(ClassCheck.getInstr());
-	            Save(ClassCheck.getInstr(),"instructions");
-	            Save(ClassCheck.getNext(),"next");
-	            Save(ClassCheck.getVarUse(),"varUse");
-	            Save(ClassCheck.getVar(),"var");
-	            Save(ClassCheck.getVarDef(),"varDef");
-	            Save(ClassCheck.getVarMove(),"varMove");
-	            Save(ClassCheck.getConstMove(),"constMove");
+	            boolean theDir = new File("./"+out_name +"/facts").mkdirs();
+
+	            System.out.println("./"+out_name +"/facts");
+	            Save(ClassCheck.getInstr(),"instructions","./"+out_name+"/facts");
+	            Save(ClassCheck.getNext(),"next","./"+out_name+"/facts");
+	            Save(ClassCheck.getVarUse(),"varUse","./"+out_name+"/facts");
+	            Save(ClassCheck.getVar(),"var","./"+out_name+"/facts");
+	            Save(ClassCheck.getVarDef(),"varDef","./"+out_name+"/facts");
+	            Save(ClassCheck.getVarMove(),"varMove","./"+out_name+"/facts");
+	            Save(ClassCheck.getConstMove(),"constMove","./"+out_name+"/facts");
 	          //  System.out.println(code);
 				/* Write to output File */
 			//	bw.write(code);
@@ -80,10 +83,10 @@ public class Main {
     }
 
    
-    public static void Save(ArrayList<String> array,String filename){
+    public static void Save(ArrayList<String> array,String filename,String folder){
     	String code = "";
         try{
-			File outputFILE = new File("./"+filename+".iris");
+			File outputFILE = new File(folder+"/"+filename+".iris");
 			if( !outputFILE.exists() )
 				outputFILE.createNewFile();
 			FileWriter fw = new FileWriter( outputFILE.getAbsoluteFile() );
