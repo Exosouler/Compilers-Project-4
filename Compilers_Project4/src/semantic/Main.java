@@ -160,7 +160,7 @@ public class Main {
             System.exit(-1);
         }
         System.out.println("e");
-        File rulesFile = new File("./analysis-logic" + "/rules.iris");
+        File rulesFile = new File("./analysis-logic" + "/LiveRangeComputation.iris");
         Reader rulesReader = new FileReader(rulesFile);
         System.out.println("e");
         File queriesFile = new File("./queries"+ "/queries.iris");
@@ -170,7 +170,7 @@ public class Main {
         parser.parse(rulesReader);
         // Retrieve the rules from the parsed file.
         List<IRule> rules = parser.getRules();
-
+        
         // Parse queries file.
         parser.parse(queriesReader);
         // Retrieve the queries from the parsed file.
