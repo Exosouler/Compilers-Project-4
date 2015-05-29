@@ -9,6 +9,7 @@ varUse("MAIN", 10, "TEMP 26").
 varUse("MAIN", 10, "TEMP 24").
 varUse("MAIN", 10, "TEMP 27").
 varUse("MAIN", 11, "TEMP 28").
+varUse("MAIN", 12, "TEMP 27").
 varUse("Fac_ComputeFac", 2, "TEMP 1").
 varUse("Fac_ComputeFac", 2, "TEMP 32").
 varUse("Fac_ComputeFac", 3, "TEMP 33").
@@ -22,5 +23,5 @@ varUse("Fac_ComputeFac", 12, "TEMP 35").
 varUse("Fac_ComputeFac", 12, "TEMP 39").
 varUse("Fac_ComputeFac", 13, "TEMP 1").
 varUse("Fac_ComputeFac", 13, "TEMP 40").
-varUse("Fac_ComputeFac", 14, "TEMP 41").
 varUse("Fac_ComputeFac", 16, "TEMP 31").
+varUse("Fac_ComputeFac", 18, "TEMP 31").
