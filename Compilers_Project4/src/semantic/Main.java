@@ -51,7 +51,7 @@ public class Main {
 			 String out_name = input.substring(0, len);
 			 theDir = new File("./optimised-code/"+out_name +"/").mkdirs();	
 			 ArrayList<String> lines = opt.readFile(args[i]);
-			 System.out.println(lines);
+			
 		//		File outputFILE = new File("./"+out_name+"spg");
 		//		if( !outputFILE.exists() )
 		//			outputFILE.createNewFile();
@@ -64,10 +64,9 @@ public class Main {
 	            ClassesCheck ClassCheck =  new ClassesCheck();
 	            
 	            tree.accept(ClassCheck,null);
-	            System.out.println(ClassCheck.getInstr());
+	            System.out.println("Generating Facts for: "+out_name+".spg");
+	            
 	            theDir = new File("./generated-facts/"+out_name +"/").mkdirs();
-
-	            System.out.println("./"+out_name +"/facts");
 	            opt.Save(ClassCheck.getInstr(),"instructions","./generated-facts/"+out_name +"/");
 	            opt.Save(ClassCheck.getNext(),"next","./generated-facts/"+out_name +"/");
 	            opt.Save(ClassCheck.getVarUse(),"varUse","./generated-facts/"+out_name +"/");
@@ -127,11 +126,11 @@ public class Main {
 
                 else {
                     Reader factsReader = new FileReader(fileEntry);
-                    System.out.println(fileEntry);
+                    
                     parser.parse(factsReader);
                  //   System.out.println(fileEntry);
                     // Retrieve the facts and put all of them in factMap
-                    System.out.println(parser.getFacts());
+                    
                     factMap.putAll(parser.getFacts());
                     
                 }
@@ -141,16 +140,32 @@ public class Main {
             System.err.println("Invalid facts directory path");
             System.exit(-1);
         }
-        File rulesFile = new File("./analysis-logic" + "/LiveRangeComputation.iris");
-        Reader rulesReader = new FileReader(rulesFile);
+        File rulesFile;
+        List<IRule> rules;
+        List<IRule> rules1;
+        Reader rulesReader;
+        rulesFile = new File("./analysis-logic" + "/LiveRangeComputation.iris");
+        rulesReader = new FileReader(rulesFile);
         parser.parse(rulesReader);        
-        List<IRule> rules = parser.getRules();
+        rules = parser.getRules();
         
-        File  rulesFile2 = new File("./analysis-logic" + "/DeadCodeComputation.iris");
-        Reader rulesReader2 = new FileReader(rulesFile2);
-        parser.parse(rulesReader2);
-        List<IRule>  rules1 =  parser.getRules();;
+        rulesFile = new File("./analysis-logic" + "/DeadCodeComputation.iris");
+        rulesReader = new FileReader(rulesFile);
+        parser.parse(rulesReader);
+        rules1 =  parser.getRules();;
         rules.addAll(rules1);
+        
+        rulesFile = new File("./analysis-logic" + "/Constant-CopyPropagation.iris");
+        rulesReader = new FileReader(rulesFile);
+        parser.parse(rulesReader);
+        rules1 =  parser.getRules();;
+        rules.addAll(rules1); 
+        
+        rulesFile = new File("./analysis-logic" + "/BasicBlockBomputation.iris");
+        rulesReader = new FileReader(rulesFile);
+        parser.parse(rulesReader);
+        rules1 =  parser.getRules();;
+        rules.addAll(rules1);       
         File queriesFile = new File("./queries"+ "/queries.iris");
         Reader queriesReader = new FileReader(queriesFile);
         // Parse rules file.

@@ -91,7 +91,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     * f0 -> ( ( Label() )? Stmt() )*
     */
    public void visit(StmtList n, String methodName) throws Exception {
-	  System.out.println("StmtList");
+
       n.f0.accept(this, methodName);
    }
 
@@ -130,7 +130,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
 	  label = expr;
 	  
 	  label = expr;
-	  System.out.println(label);
+
 	  jump=false;
 	  if (labeled==true){
 	      findLabel(expr,methodName);
@@ -145,7 +145,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
 	  }
 	  expr="";	 
       n.f0.accept(this, methodName);
-      System.out.println(expr);
+ 
       if (!label.equals(""))
     	  inst = label+" "+expr;
       else
@@ -200,7 +200,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
       n.f2.accept(this, methodName);
       if (expr.length()>0)
     	  expr = expr.substring(0, expr.length()-1);      
-      System.out.println("$|"+expr+"|");  
+
       temp +=expr;
      
 	//  instr.add("instruction(\""+methodName+"\", "+ ++i_counter+", \""+temp+"\").");
@@ -233,8 +233,7 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
 		 jump = true;
       }
       else
-    	  jump=false;
-      System.out.println("$|"+expr+"|");  
+    	  jump=false; 
       jumps.put(expr,i_counter);
       expr = temp;
      
@@ -362,7 +361,6 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
       
       n.f3.accept(this, methodName);  
       instr.add("instruction(\""+methodName+"\", "+ i_counter+", \""+expr+"\").");
-      System.out.println("@"+expr);
       n.f4.accept(this, methodName);
    }
 
@@ -463,11 +461,9 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
     	  Label = label.substring(0, label.length()-1);
       else
     	  Label = label;
-	  System.out.println("?|"+label+"|"); 
+
 	  if (cjumps.containsKey(Label)){
-		  System.out.println("Bhka\n");
 		  counter = cjumps.get(Label);
-		  System.out.println(counter);
 		  element = "next(\""+methodName+"\", "+counter+", "+(counter+1)+").";
 		  index = next.indexOf(element);
 		  element = "next(\""+methodName+"\", "+counter+", "+(i_counter+1)+").";
@@ -477,7 +473,6 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
 	  else if (jumps.containsKey(Label)){
 		  counter = jumps.get(Label);
 		  element = "next(\""+methodName+"\", "+counter+", "+(counter+1)+").";
-		  System.out.print("%%"+element);
 		  index = next.indexOf(element);
 		  next.remove(index);
 		  element = "next(\""+methodName+"\", "+counter+", "+(i_counter+1)+").";
