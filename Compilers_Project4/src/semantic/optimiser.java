@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 
 public class optimiser {
+	public boolean Const = true;
 	private static ArrayList<String> lines;
 	public ArrayList<String> readFile(String pathname) throws IOException {
 
@@ -119,8 +120,10 @@ public class optimiser {
 			String temp;
             while (ilines.hasNext()){
 	        	line = ilines.next();
+	        	
 	          	temp = line.replaceAll("\\s+","");
-	          	
+			  	if (line==null || line.length()<=1)
+			  		continue;
 	          	if (line.split(" ")[0].equals(method))
 	          		flag = true;
 	          	else if (lines.equals("END"))
@@ -128,8 +131,15 @@ public class optimiser {
 	
 	          	
 	          	if (flag && temp.equals(com)){
+	          		if (Const && line.contains("CALL"))
+	          			continue;
+	          		int temp_index = line.indexOf(Temp);
+	          		if (temp_index <line.lastIndexOf("TEMP"))
+	          			continue;
 	          		index = templist.indexOf(line);
+	          		
 	          		if (index!=-1){
+	          			
 		        		templist.remove(line);
 		        		line = line.replace(Temp, value);
 		        		templist.add(index,line);
@@ -180,11 +190,14 @@ public class optimiser {
 			com = com.replaceAll("\\s+","");
 			Iterator<String> ilines = lines.iterator();
 			String temp;
+
 			while (ilines.hasNext()){
 			  	line = ilines.next();
+			  	if (line==null || line.length()<=1)
+			  		continue;
 			  	temp = line.replaceAll("\\s+","");
-				
-				if (line.split(" ")[0].equals(method))
+		
+				if (line!=null && line.equals(method))
 					flag = true;
 				else if (lines.equals("END"))
 				  		flag = false;		
@@ -196,6 +209,7 @@ public class optimiser {
 			  }
 			  
 		}
+		System.out.println("bhka");
 		File outputFILE = new File("./optimised-code/"+arg+"/"+arg+".spg");
 		if( !outputFILE.exists() )
 			outputFILE.createNewFile();

@@ -138,7 +138,6 @@ public class ClassesCheck extends GJVoidDepthFirst<String>{
 	    	  expr = expr.substring(0, expr.length()-1);      
 	      if (!cjumps.containsKey(expr) && !jumps.containsKey(expr)){
 	    	  
-	    	  System.out.println("*********"+expr);
 	    	  labels.put(expr, i_counter+1);
 	      }
 	      jump = true;

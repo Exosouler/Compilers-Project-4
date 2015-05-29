@@ -195,12 +195,15 @@ public class Main {
             if (query.toString().equals("?- dead(?m, ?i, ?v).")){ 
             	opt.deleteDeadCode(args,relation,projectDirectory + args);
             }
-            if (query.toString().equals("?- const_progaration(?m, ?i, ?v1, ?c1).")){ 
+            if (query.toString().equals("?- const_propagation(?m, ?i, ?v1, ?c1).")){ 
             	opt.Replace(args,relation,projectDirectory + args);
+            	opt.Const = false;
             }  
-            if (query.toString().equals("?- copy_progaration(?m, ?i, ?v, ?k).")){ 
+            if (query.toString().equals("?- copy_propagation(?m, ?i, ?v, ?k).")){ 
             	opt.Replace(args,relation,projectDirectory + args);
-            }              
+            	opt.Const = true;
+            } 
+            
             // Output the variables.
             
 
