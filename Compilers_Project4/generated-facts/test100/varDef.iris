@@ -31,4 +31,4 @@ varDef("A23_init", 18, "TEMP 67").
 varDef("A23_init", 19, "TEMP 44").
 varDef("A23_init", 21, "TEMP 68").
 varDef("A23_init", 22, "TEMP 48").
-varDef("A23_init", 25, "TEMP 48").
+varDef("A23_init", 25, "TEMP 46").

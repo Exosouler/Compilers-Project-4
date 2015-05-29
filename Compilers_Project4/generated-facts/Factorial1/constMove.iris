@@ -3,4 +3,3 @@ constMove("Fac_ComputeFac", 1,"TEMP 32", "1").
 constMove("Fac_ComputeFac", 4,"TEMP 31", "1").
 constMove("Fac_ComputeFac", 10,"TEMP 38", "1").
 constMove("Fac_ComputeFac", 14,"TEMP 41", "5").
-constMove("Fac_ComputeFac", 15,"TEMP 31", "6").

@@ -21,18 +21,23 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Main {
+	static ArrayList<String> lines;
+	static optimiser opt = new optimiser(); 
     public static void main (String [] args){
 
     	int i;
     	boolean theDir = new File("./generated-facts").mkdirs();
+    	
     	for (i=0;i<args.length;i++){
-
+    		
 	        FileInputStream fis = null;
 	        try{
 	        	
 	            fis = new FileInputStream(args[i]);
+	           
 				/* Output File */
 	           
 
@@ -44,7 +49,9 @@ public class Main {
 	        	 input = args[i];
 	         int len = input.length() - 4;
 			 String out_name = input.substring(0, len);
-				
+			 theDir = new File("./optimised-code/"+out_name +"/").mkdirs();	
+			 ArrayList<String> lines = opt.readFile(args[i]);
+			 System.out.println(lines);
 		//		File outputFILE = new File("./"+out_name+"spg");
 		//		if( !outputFILE.exists() )
 		//			outputFILE.createNewFile();
@@ -61,13 +68,13 @@ public class Main {
 	            theDir = new File("./generated-facts/"+out_name +"/").mkdirs();
 
 	            System.out.println("./"+out_name +"/facts");
-	            Save(ClassCheck.getInstr(),"instructions","./generated-facts/"+out_name +"/");
-	            Save(ClassCheck.getNext(),"next","./generated-facts/"+out_name +"/");
-	            Save(ClassCheck.getVarUse(),"varUse","./generated-facts/"+out_name +"/");
-	            Save(ClassCheck.getVar(),"var","./generated-facts/"+out_name +"/");
-	            Save(ClassCheck.getVarDef(),"varDef","./generated-facts/"+out_name +"/");
-	            Save(ClassCheck.getVarMove(),"varMove","./generated-facts/"+out_name +"/");
-	            Save(ClassCheck.getConstMove(),"constMove","./generated-facts/"+out_name +"/");
+	            opt.Save(ClassCheck.getInstr(),"instructions","./generated-facts/"+out_name +"/");
+	            opt.Save(ClassCheck.getNext(),"next","./generated-facts/"+out_name +"/");
+	            opt.Save(ClassCheck.getVarUse(),"varUse","./generated-facts/"+out_name +"/");
+	            opt.Save(ClassCheck.getVar(),"var","./generated-facts/"+out_name +"/");
+	            opt.Save(ClassCheck.getVarDef(),"varDef","./generated-facts/"+out_name +"/");
+	            opt.Save(ClassCheck.getVarMove(),"varMove","./generated-facts/"+out_name +"/");
+	            opt.Save(ClassCheck.getConstMove(),"constMove","./generated-facts/"+out_name +"/");
 	            DatalogMain(out_name);
 	          //  System.out.println(code);
 				/* Write to output File */
@@ -97,40 +104,15 @@ public class Main {
     	} 
     }
 
-   
-    public static void Save(ArrayList<String> array,String filename,String folder){
-    	String code = "";
-        try{
-			File outputFILE = new File(folder+"/"+filename+".iris");
-			if( !outputFILE.exists() )
-				outputFILE.createNewFile();
-			FileWriter fw = new FileWriter( outputFILE.getAbsoluteFile() );
-			BufferedWriter bw = new BufferedWriter(fw);
-			
-			Iterator<String> pargs = array.iterator();
-			String arg;
-			while (pargs.hasNext()){
-				arg = pargs.next();
-				code +=arg;
-				code +="\n";
-			}
-			
-			bw.write(code);
-			bw.close();	  			
-        }
-		catch(Exception e){
-			System.out.println("Internal Error.");
-		}
-
-		
-    }
+    
+    
     public static void DatalogMain(String args) throws Exception {
 
         Parser parser = new Parser();
 
         final String projectDirectory = "./generated-facts/";
         Map<IPredicate, IRelation> factMap = new HashMap<>();
-
+        
         /** The following loop -- given a project directory -- will list and read parse all fact files in its "/facts"
          *  subdirectory. This allows you to have multiple .iris files with your program facts. For instance you can
          *  have one file for each relation's facts as our examples show.
@@ -162,12 +144,20 @@ public class Main {
         
         File rulesFile = new File("./analysis-logic" + "/LiveRangeComputation.iris");
         Reader rulesReader = new FileReader(rulesFile);
+        parser.parse(rulesReader);        
+        List<IRule> rules = parser.getRules();
+        
+        File  rulesFile2 = new File("./analysis-logic" + "/DeadCodeComputation.iris");
+        Reader rulesReader2 = new FileReader(rulesFile2);
+        parser.parse(rulesReader2);
+        List<IRule>  rules1 =  parser.getRules();;
+        rules.addAll(rules1);
         File queriesFile = new File("./queries"+ "/queries.iris");
         Reader queriesReader = new FileReader(queriesFile);
         // Parse rules file.
-        parser.parse(rulesReader);
+
         // Retrieve the rules from the parsed file.
-        List<IRule> rules = parser.getRules();
+        
         
         // Parse queries file.
         parser.parse(queriesReader);
@@ -187,16 +177,27 @@ public class Main {
         for (IQuery query : queries) {
             List<IVariable> variableBindings = new ArrayList<>();
             IRelation relation = knowledgeBase.execute(query, variableBindings);
-
-            // Output the variables.
             System.out.println("\n&&" + query.toString() + "\n" + variableBindings);
+            if (query.toString().equals("?- dead(?m, ?i, ?v).")){ 
+            	opt.deleteDeadCode(args,relation,projectDirectory + args);
+            }
+            if (query.toString().equals("?- const_progaration(?m, ?i, ?v1, ?c1).")){ 
+            	opt.ReplaceConst(args,relation,projectDirectory + args);
+            }           
+            // Output the variables.
+            
 
             // Output each tuple in the relation, where the term at position i
             // corresponds to the variable at position i in the variable
             // bindings list.
             for (int i = 0; i < relation.size(); i++) {
                 System.out.println("?"+relation.get(i));
-            }
+            }             
+
         }
     }
+    
+    
+ 
+	
 }

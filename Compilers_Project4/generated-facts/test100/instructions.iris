@@ -50,5 +50,5 @@ instruction("A23_init", 21, "MOVE TEMP 68 1").
 instruction("A23_init", 22, "MOVE TEMP 48 TEMP 68").
 instruction("A23_init", 23, "JUMP L2").
 instruction("A23_init", 24, "L3  NOOP").
-instruction("A23_init", 25, "MOVE TEMP 48 TEMP 46").
+instruction("A23_init", 25, "MOVE TEMP 46 TEMP 48").
 instruction("A23_init", 26, "RETURN TEMP 46 ").

@@ -42,5 +42,5 @@ varUse("A23_init", 14, "TEMP 48").
 varUse("A23_init", 15, "TEMP 66").
 varUse("A23_init", 19, "TEMP 67").
 varUse("A23_init", 22, "TEMP 68").
-varUse("A23_init", 25, "TEMP 46").
+varUse("A23_init", 25, "TEMP 48").
 varUse("A23_init", 26, "TEMP 46").

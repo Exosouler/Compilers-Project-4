@@ -24,7 +24,8 @@ instruction("Fac_ComputeFac", 11, "MOVE TEMP 39 MINUS TEMP 1 TEMP 38").
 instruction("Fac_ComputeFac", 12, "MOVE TEMP 40 CALL TEMP 37 ( TEMP 35 TEMP 39 )").
 instruction("Fac_ComputeFac", 13, "MOVE TEMP 41 TIMES TEMP 1 TEMP 40").
 instruction("Fac_ComputeFac", 14, "MOVE TEMP 41 5").
-instruction("Fac_ComputeFac", 15, "MOVE TEMP 31 6").
-instruction("Fac_ComputeFac", 16, "MOVE TEMP 50 TEMP 31").
-instruction("Fac_ComputeFac", 17, "L1  NOOP").
-instruction("Fac_ComputeFac", 18, "RETURN TEMP 31 ").
+instruction("Fac_ComputeFac", 15, "MOVE TEMP 50 TEMP 41").
+instruction("Fac_ComputeFac", 16, "MOVE TEMP 31 TEMP 50").
+instruction("Fac_ComputeFac", 17, "MOVE TEMP 50 TEMP 31").
+instruction("Fac_ComputeFac", 18, "L1  NOOP").
+instruction("Fac_ComputeFac", 19, "RETURN TEMP 31 ").
