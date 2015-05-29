@@ -131,10 +131,11 @@ public class optimiser {
 	
 	          	
 	          	if (flag && temp.equals(com)){
+	          		
 	          		if (Const && line.contains("CALL"))
 	          			continue;
 	          		int temp_index = line.indexOf(Temp);
-	          		if (temp_index <line.lastIndexOf("TEMP"))
+	          		if (Const && temp_index <line.lastIndexOf("TEMP"))
 	          			continue;
 	          		index = templist.indexOf(line);
 	          		
