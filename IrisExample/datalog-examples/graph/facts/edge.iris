@@ -1,7 +1,0 @@
-edge('A', 'B').
-edge('B', 'C').
-edge('A', 'E').
-edge('C', 'D').
-edge('D', 'E').
-edge('F', 'G').
-edge('E', 'G').

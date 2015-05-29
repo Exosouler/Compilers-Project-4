@@ -1,8 +1,0 @@
-// queries
-?- cousin(?x, ?y).
-
-?- parent(?y, 'jim'), parent(?x, ?y).
-
-?- predecessor(?x, ?y).
-
-?- singleChild(?x).
