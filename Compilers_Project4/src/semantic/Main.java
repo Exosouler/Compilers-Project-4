@@ -183,7 +183,10 @@ public class Main {
             }
             if (query.toString().equals("?- const_progaration(?m, ?i, ?v1, ?c1).")){ 
             	opt.ReplaceConst(args,relation,projectDirectory + args);
-            }           
+            }  
+            if (query.toString().equals("?- copy_progaration(?m, ?i, ?v, ?k).")){ 
+            	opt.ReplaceCopy(args,relation,projectDirectory + args);
+            }              
             // Output the variables.
             
 
