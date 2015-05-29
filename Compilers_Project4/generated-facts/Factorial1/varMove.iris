@@ -1,5 +1,6 @@
 varMove("MAIN", 6,"TEMP 24", "TEMP 22").
-varMove("Fac_ComputeFac", 7,"TEMP 35", "TEMP 0").
-varMove("Fac_ComputeFac", 15,"TEMP 50", "TEMP 41").
-varMove("Fac_ComputeFac", 16,"TEMP 31", "TEMP 50").
+varMove("Fac_ComputeFac", 5,"TEMP 31", "TEMP 60").
+varMove("Fac_ComputeFac", 8,"TEMP 35", "TEMP 0").
+varMove("Fac_ComputeFac", 15,"TEMP 31", "TEMP 41").
 varMove("Fac_ComputeFac", 17,"TEMP 50", "TEMP 31").
+varMove("Fac_ComputeFac", 18,"TEMP 38", "TEMP 50").

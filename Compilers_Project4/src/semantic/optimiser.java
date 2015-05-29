@@ -87,7 +87,7 @@ public class optimiser {
         return readFile(folder+"/instructions.iris",counter,method);
         
       }
-    public void ReplaceConst(String arg,IRelation relation,String folder)throws Exception {
+    public void Replace(String arg,IRelation relation,String folder)throws Exception {
   		int i_counter;
   		String line;
   		String counter;
@@ -102,214 +102,116 @@ public class optimiser {
   		templist.addAll(lines);
   		boolean flag = false;
   		
-          for (int i = 0; i < relation.size(); i++) {
-          	System.out.println("arxh");
-          	line = relation.get(i).toString();
-          	System.out.println(line);
-          	counter = line.split(",")[1];
-          	counter = counter.substring(1);
-          	i_counter = Integer.valueOf(counter);
-          	method = line.split("'")[1];
-          	Temp = line.split("'")[3];
-          	value = line.split("'")[5];
-          	instr = findInstruction(i_counter,folder,method);
-              System.out.println(instr);
-              method = instr.split("\"")[1];
-              com = instr.split("\"")[3];
+  		for (int i = 0; i < relation.size(); i++) {
+			line = relation.get(i).toString();        
+			counter = line.split(",")[1];
+			counter = counter.substring(1);
+			i_counter = Integer.valueOf(counter);
+			method = line.split("'")[1];
+			Temp = line.split("'")[3];
+			value = line.split("'")[5];
+			instr = findInstruction(i_counter,folder,method);
+			method = instr.split("\"")[1];
+			com = instr.split("\"")[3];
+			 
+			com = com.replaceAll("\\s+","");
+			Iterator<String> ilines = lines.iterator();
+			String temp;
+            while (ilines.hasNext()){
+	        	line = ilines.next();
+	          	temp = line.replaceAll("\\s+","");
+	          	
+	          	if (line.split(" ")[0].equals(method))
+	          		flag = true;
+	          	else if (lines.equals("END"))
+	          		flag = false;
+	
+	          	
+	          	if (flag && temp.equals(com)){
+	          		index = templist.indexOf(line);
+	          		if (index!=-1){
+		        		templist.remove(line);
+		        		line = line.replace(Temp, value);
+		        		templist.add(index,line);
+	          		}
+	          	}           		
+	          	
+	          }
               
-              System.out.println(method);
-              System.out.println(com);
-             
-              com = com.replaceAll("\\s+","");
-  			Iterator<String> ilines = lines.iterator();
-  			String temp;
-              while (ilines.hasNext()){
-              	line = ilines.next();
-              	temp = line.replaceAll("\\s+","");
-              	
-              	if (line.split(" ")[0].equals(method))
-              		flag = true;
-              	else if (lines.equals("END"))
-              		flag = false;
-
-              	
-              	if (flag && temp.equals(com)){
-              		index = templist.indexOf(line);
-              		if (index!=-1){
-  		        		templist.remove(line);
-  		        		System.out.println("|"+Temp+"|");
-  		        		System.out.println("|"+value+"|");
-  		        		line = line.replace(Temp, value);
-  		        		System.out.println("|"+line+"|");
-  		        		System.out.println("|"+index+"|");
-  		        		templist.add(index,line);
-  		        		System.out.println("|"+index+"|");
-              		}
-              	}           		
-              	
-              }
-              
-          }
-          System.out.println(templist);
-  		File outputFILE = new File("./optimised-code/"+arg+"/"+arg+".spg");
-  		if( !outputFILE.exists() )
-  			outputFILE.createNewFile();
-  		FileWriter fw = new FileWriter( outputFILE.getAbsoluteFile() );
-  		BufferedWriter bw = new BufferedWriter(fw);	 
-  		lines = templist;
-  		Iterator<String> ilines = lines.iterator();
-  		while (ilines.hasNext()){
-           	line = ilines.next();
-           	Code +=line+"\n";
-  		}
-            System.out.println(Code);
+        }
+		File outputFILE = new File("./optimised-code/"+arg+"/"+arg+".spg");
+		if( !outputFILE.exists() )
+			outputFILE.createNewFile();
+		FileWriter fw = new FileWriter( outputFILE.getAbsoluteFile() );
+		BufferedWriter bw = new BufferedWriter(fw);	 
+		lines = templist;
+		Iterator<String> ilines = lines.iterator();
+		while (ilines.hasNext()){
+		   	line = ilines.next();
+		   	Code +=line+"\n";
+		}
   		/*Write to output File */
-  			bw.write(Code);
-  			bw.close();
+		bw.write(Code);
+		bw.close();
   		
-  	}   
-    public void ReplaceCopy(String arg,IRelation relation,String folder)throws Exception {
-  		int i_counter;
-  		String line;
-  		String counter;
-  		String instr;
-  		String method;
-  		String com;
-  		String Code="";
-  		String Temp;
-  		String value;
-  		int index;
-  		ArrayList<String> templist = new ArrayList<String>();
-  		templist.addAll(lines);
-  		boolean flag = false;
-  		
-          for (int i = 0; i < relation.size(); i++) {
-          	System.out.println("arxh");
-          	line = relation.get(i).toString();
-          	System.out.println(line);
-          	counter = line.split(",")[1];
-          	counter = counter.substring(1);
-          	i_counter = Integer.valueOf(counter);
-          	method = line.split("'")[1];
-          	Temp = line.split("'")[3];
-          	value = line.split("'")[5];
-          	instr = findInstruction(i_counter,folder,method);
-              System.out.println(instr);
-              method = instr.split("\"")[1];
-              com = instr.split("\"")[3];
-              
-              System.out.println(method);
-              System.out.println(com);
-             
-              com = com.replaceAll("\\s+","");
-  			Iterator<String> ilines = lines.iterator();
-  			String temp;
-              while (ilines.hasNext()){
-              	line = ilines.next();
-              	temp = line.replaceAll("\\s+","");
-              	
-              	if (line.split(" ")[0].equals(method))
-              		flag = true;
-              	else if (lines.equals("END"))
-              		flag = false;
-
-              	
-              	if (flag && temp.equals(com)){
-              		index = templist.indexOf(line);
-              		if (index!=-1){
-  		        		templist.remove(line);
-  		        		System.out.println("|"+Temp+"|");
-  		        		System.out.println("|"+value+"|");
-  		        		line = line.replace(Temp, value);
-  		        		System.out.println("|"+line+"|");
-  		        		System.out.println("|"+index+"|");
-  		        		templist.add(index,line);
-  		        		System.out.println("|"+index+"|");
-              		}
-              	}           		
-              	
-              }
-              
-          }
-          System.out.println(templist);
-  		File outputFILE = new File("./optimised-code/"+arg+"/"+arg+".spg");
-  		if( !outputFILE.exists() )
-  			outputFILE.createNewFile();
-  		FileWriter fw = new FileWriter( outputFILE.getAbsoluteFile() );
-  		BufferedWriter bw = new BufferedWriter(fw);	 
-  		lines = templist;
-  		Iterator<String> ilines = lines.iterator();
-  		while (ilines.hasNext()){
-           	line = ilines.next();
-           	Code +=line+"\n";
-  		}
-            System.out.println(Code);
-  		/*Write to output File */
-  			bw.write(Code);
-  			bw.close();
-  		
-  	}       
+  	}          
     public void deleteDeadCode(String arg,IRelation relation,String folder)throws Exception {
-  		int i_counter;
-  		String line;
-  		String counter;
-  		String instr;
-  		String method;
-  		String com;
-  		String Code="";
-  		ArrayList<String> templist = new ArrayList<String>();
-  		templist.addAll(lines);
-  		boolean flag = false;
-  		
-          for (int i = 0; i < relation.size(); i++) {
-          	line = relation.get(i).toString();
-          	counter = line.split(",")[1];
-          	counter = counter.substring(1);
-          	i_counter = Integer.valueOf(counter);
-          	method = line.split("'")[1];
-          	instr = findInstruction(i_counter,folder,method);
-              System.out.println(instr);
-              method = instr.split("\"")[1];
-              com = instr.split("\"")[3];
-              System.out.println(method);
-              System.out.println(com);
-             
-              com = com.replaceAll("\\s+","");
-  			Iterator<String> ilines = lines.iterator();
-  			String temp;
-              while (ilines.hasNext()){
-              	line = ilines.next();
-              	temp = line.replaceAll("\\s+","");
-              	
-              	if (line.split(" ")[0].equals(method))
-              		flag = true;
-              	else if (lines.equals("END"))
-              		flag = false;
-
-              	
-              	if (flag && temp.equals(com)){
-              		templist.remove(line);
-              	}           		
-              	
-              }
-              
-          }
-  		File outputFILE = new File("./optimised-code/"+arg+"/"+arg+".spg");
-  		if( !outputFILE.exists() )
-  			outputFILE.createNewFile();
-  		FileWriter fw = new FileWriter( outputFILE.getAbsoluteFile() );
-  		BufferedWriter bw = new BufferedWriter(fw);	 
-  		lines = templist;
-  		Iterator<String> ilines = lines.iterator();
-  		while (ilines.hasNext()){
-           	line = ilines.next();
-           	Code +=line+"\n";
-  		}
-            System.out.println(Code);
-  		/*Write to output File */
-  			bw.write(Code);
-  			bw.close();
-  		
-  	}	
+		int i_counter;
+		String line;
+		String counter;
+		String instr;
+		String method;
+		String com;
+		String Code="";
+		ArrayList<String> templist = new ArrayList<String>();
+		templist.addAll(lines);
+		boolean flag = false;
+		
+		for (int i = 0; i < relation.size(); i++) {
+			
+			line = relation.get(i).toString();
+			counter = line.split(",")[1];
+			counter = counter.substring(1);
+			i_counter = Integer.valueOf(counter);
+			method = line.split("'")[1];
+			instr = findInstruction(i_counter,folder,method);
+			method = instr.split("\"")[1];
+			com = instr.split("\"")[3];
+			com = com.replaceAll("\\s+","");
+			Iterator<String> ilines = lines.iterator();
+			String temp;
+			while (ilines.hasNext()){
+			  	line = ilines.next();
+			  	temp = line.replaceAll("\\s+","");
+				
+				if (line.split(" ")[0].equals(method))
+					flag = true;
+				else if (lines.equals("END"))
+				  		flag = false;		
+				
+			  	if (flag && temp.equals(com)){
+			  		templist.remove(line);
+			  	}           		
+			  	
+			  }
+			  
+		}
+		File outputFILE = new File("./optimised-code/"+arg+"/"+arg+".spg");
+		if( !outputFILE.exists() )
+			outputFILE.createNewFile();
+		FileWriter fw = new FileWriter( outputFILE.getAbsoluteFile() );
+		BufferedWriter bw = new BufferedWriter(fw);	 
+		lines = templist;
+		Iterator<String> ilines = lines.iterator();
+		while (ilines.hasNext()){
+		   	line = ilines.next();
+		   	Code +=line+"\n";
+		}
+		
+		/*Write to output File */
+		bw.write(Code);
+		bw.close();
+			
+	}	
 	
 }

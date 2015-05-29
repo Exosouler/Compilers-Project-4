@@ -141,7 +141,6 @@ public class Main {
             System.err.println("Invalid facts directory path");
             System.exit(-1);
         }
-        
         File rulesFile = new File("./analysis-logic" + "/LiveRangeComputation.iris");
         Reader rulesReader = new FileReader(rulesFile);
         parser.parse(rulesReader);        
@@ -177,15 +176,15 @@ public class Main {
         for (IQuery query : queries) {
             List<IVariable> variableBindings = new ArrayList<>();
             IRelation relation = knowledgeBase.execute(query, variableBindings);
-            System.out.println("\n&&" + query.toString() + "\n" + variableBindings);
+            System.out.println("\n" + query.toString() + "\n" + variableBindings);
             if (query.toString().equals("?- dead(?m, ?i, ?v).")){ 
             	opt.deleteDeadCode(args,relation,projectDirectory + args);
             }
             if (query.toString().equals("?- const_progaration(?m, ?i, ?v1, ?c1).")){ 
-            	opt.ReplaceConst(args,relation,projectDirectory + args);
+            	opt.Replace(args,relation,projectDirectory + args);
             }  
             if (query.toString().equals("?- copy_progaration(?m, ?i, ?v, ?k).")){ 
-            	opt.ReplaceCopy(args,relation,projectDirectory + args);
+            	opt.Replace(args,relation,projectDirectory + args);
             }              
             // Output the variables.
             
@@ -194,7 +193,7 @@ public class Main {
             // corresponds to the variable at position i in the variable
             // bindings list.
             for (int i = 0; i < relation.size(); i++) {
-                System.out.println("?"+relation.get(i));
+                System.out.println(relation.get(i));
             }             
 
         }

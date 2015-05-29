@@ -13,19 +13,20 @@ instruction("MAIN", 12, "PRINT TEMP 27 ").
 instruction("Fac_ComputeFac", 1, "MOVE TEMP 32 1").
 instruction("Fac_ComputeFac", 2, "MOVE TEMP 33 LT TEMP 1 TEMP 32").
 instruction("Fac_ComputeFac", 3, "CJUMP TEMP 33 L0").
-instruction("Fac_ComputeFac", 4, "MOVE TEMP 31 1").
-instruction("Fac_ComputeFac", 5, "JUMP L1").
-instruction("Fac_ComputeFac", 6, "L0  NOOP").
-instruction("Fac_ComputeFac", 7, "MOVE TEMP 35 TEMP 0").
-instruction("Fac_ComputeFac", 8, "HLOAD TEMP 36 TEMP 35 0").
-instruction("Fac_ComputeFac", 9, "HLOAD TEMP 37 TEMP 36 0").
-instruction("Fac_ComputeFac", 10, "MOVE TEMP 38 1").
-instruction("Fac_ComputeFac", 11, "MOVE TEMP 39 MINUS TEMP 1 TEMP 38").
-instruction("Fac_ComputeFac", 12, "MOVE TEMP 40 CALL TEMP 37 ( TEMP 35 TEMP 39 )").
-instruction("Fac_ComputeFac", 13, "MOVE TEMP 41 TIMES TEMP 1 TEMP 40").
-instruction("Fac_ComputeFac", 14, "MOVE TEMP 41 5").
-instruction("Fac_ComputeFac", 15, "MOVE TEMP 50 TEMP 41").
-instruction("Fac_ComputeFac", 16, "MOVE TEMP 31 TEMP 50").
+instruction("Fac_ComputeFac", 4, "MOVE TEMP 60 10").
+instruction("Fac_ComputeFac", 5, "MOVE TEMP 31 TEMP 60").
+instruction("Fac_ComputeFac", 6, "JUMP L1").
+instruction("Fac_ComputeFac", 7, "L0  NOOP").
+instruction("Fac_ComputeFac", 8, "MOVE TEMP 35 TEMP 0").
+instruction("Fac_ComputeFac", 9, "HLOAD TEMP 36 TEMP 35 0").
+instruction("Fac_ComputeFac", 10, "HLOAD TEMP 37 TEMP 36 0").
+instruction("Fac_ComputeFac", 11, "MOVE TEMP 38 1").
+instruction("Fac_ComputeFac", 12, "MOVE TEMP 39 MINUS TEMP 1 TEMP 38").
+instruction("Fac_ComputeFac", 13, "MOVE TEMP 40 CALL TEMP 37 ( TEMP 35 TEMP 39 )").
+instruction("Fac_ComputeFac", 14, "MOVE TEMP 41 TIMES TEMP 1 TEMP 40").
+instruction("Fac_ComputeFac", 15, "MOVE TEMP 31 TEMP 41").
+instruction("Fac_ComputeFac", 16, "MOVE TEMP 41 5").
 instruction("Fac_ComputeFac", 17, "MOVE TEMP 50 TEMP 31").
-instruction("Fac_ComputeFac", 18, "L1  NOOP").
-instruction("Fac_ComputeFac", 19, "RETURN TEMP 31 ").
+instruction("Fac_ComputeFac", 18, "MOVE TEMP 38 TEMP 50").
+instruction("Fac_ComputeFac", 19, "L1  NOOP").
+instruction("Fac_ComputeFac", 20, "RETURN TEMP 31 ").
